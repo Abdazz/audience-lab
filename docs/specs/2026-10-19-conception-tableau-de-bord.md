@@ -46,7 +46,7 @@ Les fichiers bruts sont versionnés dans le dépôt (`data/raw/`), la source est
   - Lignes dupliquées visibles (même session, même article, même horodatage).
   - Durée de session (dernier événement moins premier) : médiane 66 s, 33 % de sessions à 0 s (un seul horodatage), queue lourde jusqu'à 16 196 s.
   - Événements par session : médiane 21, max 979.
-- `items.csv` : 1 380 articles, `id, name, brand, variant, category, price_in_usd` (prix 1 à 313 USD, 21 catégories). Toutes les `item_id` des événements ont une correspondance.
+- `items.csv` : 1 381 articles, `id, name, brand, variant, category, price_in_usd` (prix 1 à 313 USD, 21 catégories). Toutes les `item_id` des événements ont une correspondance.
 - `users.csv` : 270 154 utilisateurs, `id, ltv, date` (ltv > 0 pour 4 445 utilisateurs).
 
 Ce jeu satisfait les critères du sujet : variable temporelle (horodatage à la seconde), variables numériques (prix, durée, nombre d'événements, valeur du panier, chiffre d'affaires, ltv), variables catégorielles (device, type, country, category, brand).
