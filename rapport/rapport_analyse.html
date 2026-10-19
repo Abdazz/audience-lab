@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Audience Lab&nbsp;: rapport d’analyse</title>
+<meta name="author" content="Abdoul-Aziz ZOROM">
+<meta name="description" content="Rapport d'analyse du projet Audience Lab : audience de la Google Merchandise Store (GA4), novembre 2020 à janvier 2021.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=block">
+<link rel="stylesheet" href="style_rapport.css">
+</head>
+<body>
+
+<!-- ================================================================ COUVERTURE -->
+<section class="couverture">
+  <div class="bandeau-haut">
+    <div class="marque">
+      <div class="logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 4 8-9"/><path d="M15 7h5v5"/></svg>
+      </div>
+      Audience Lab
+    </div>
+    <div class="type-doc">Rapport d’analyse</div>
+  </div>
+
+  <div class="bloc-titre">
+    <div class="surtitre">Projet pratique · Plateforme d’analyse et de visualisation d’audience</div>
+    <h1>Audience <span>Lab</span></h1>
+    <div class="barre"></div>
+    <p class="sous-titre">Qui visite la Google Merchandise Store, quand, sur quel appareil, et où la boutique perd-elle ses acheteurs&#8239;? Analyse de 18&#8239;101 sessions GA4, de novembre 2020 à janvier 2021.</p>
+  </div>
+
+  <div class="chiffres">
+    <div class="chiffre"><div class="valeur">18&#8239;101</div><div class="libelle">sessions analysées</div></div>
+    <div class="chiffre"><div class="valeur">14&#8239;701</div><div class="libelle">utilisateurs distincts</div></div>
+    <div class="chiffre"><div class="valeur">24,56&#8239;%</div><div class="libelle">taux de conversion</div></div>
+    <div class="chiffre"><div class="valeur">289&#8239;407&nbsp;USD</div><div class="libelle">chiffre d’affaires</div></div>
+  </div>
+
+  <div class="apercu"><img src="../docs/captures/accueil_clair.png" alt="Page d'accueil du tableau de bord Audience Lab en thème clair"></div>
+
+  <div class="pied">
+    <div>
+      <div class="etiquette">Auteur</div>
+      <div class="nom">Abdoul-Aziz ZOROM</div>
+      <div class="ligne">Master 1 Intelligence Artificielle<br>Université Aube-Nouvelle</div>
+    </div>
+    <div>
+      <div class="etiquette">Module</div>
+      <div class="ligne"><strong>Visualisation de Données avec Python</strong><br>Enseignant&nbsp;: Dr.&nbsp;Zakaria Sawadogo<br>19 octobre 2026</div>
+    </div>
+  </div>
+  <div class="liens">
+    <div class="lien">
+      <div class="icone"><svg width="15" height="15" viewBox="0 0 24 24" fill="#4F46E5"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></div>
+      <div><small>Dépôt du code</small><a href="https://github.com/Abdazz/audience-lab">github.com/Abdazz/audience-lab</a></div>
+    </div>
+    <div class="lien">
+      <div class="icone"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4F46E5" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19M12 2.5c2.6 2.8 3.9 6 3.9 9.5s-1.3 6.7-3.9 9.5c-2.6-2.8-3.9-6-3.9-9.5s1.3-6.7 3.9-9.5z"/></svg></div>
+      <div><small>Application en ligne</small><a href="https://audience-lab.streamlit.app">https://audience-lab.streamlit.app</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ SOMMAIRE -->
+<section class="sommaire">
+  <div class="entete-section">
+    <div>
+      <div class="surtitre">Plan du rapport</div>
+      <h2>Table des matières</h2>
+    </div>
+  </div>
+  <ol class="toc">
+    <li class="n1"><a href="#s0"><span class="idx">0</span><span class="titre">Synthèse&nbsp;: l’essentiel en une page</span><span class="points"></span><span class="page" data-cible="s0"></span></a></li>
+    <li class="n1"><a href="#s1"><span class="idx">1</span><span class="titre">Contexte et objectifs</span><span class="points"></span><span class="page" data-cible="s1"></span></a></li>
+    <li class="n1"><a href="#s2"><span class="idx">2</span><span class="titre">Le jeu de données</span><span class="points"></span><span class="page" data-cible="s2"></span></a></li>
+    <li class="n2"><a href="#s2-1"><span class="idx">2.1</span><span class="titre">Source, licence et période</span><span class="points"></span><span class="page" data-cible="s2-1"></span></a></li>
+    <li class="n2"><a href="#s2-2"><span class="idx">2.2</span><span class="titre">Structure et variables</span><span class="points"></span><span class="page" data-cible="s2-2"></span></a></li>
+    <li class="n2"><a href="#s2-3"><span class="idx">2.3</span><span class="titre">Critères du sujet et justification du choix</span><span class="points"></span><span class="page" data-cible="s2-3"></span></a></li>
+    <li class="n1"><a href="#s3"><span class="idx">3</span><span class="titre">Démarche de nettoyage et de préparation</span><span class="points"></span><span class="page" data-cible="s3"></span></a></li>
+    <li class="n2"><a href="#s3-1"><span class="idx">3.1</span><span class="titre">Bilan chiffré, étape par étape</span><span class="points"></span><span class="page" data-cible="s3-1"></span></a></li>
+    <li class="n2"><a href="#s3-2"><span class="idx">3.2</span><span class="titre">Décisions de nettoyage</span><span class="points"></span><span class="page" data-cible="s3-2"></span></a></li>
+    <li class="n2"><a href="#s3-3"><span class="idx">3.3</span><span class="titre">Valeurs aberrantes&nbsp;: signaler plutôt que supprimer</span><span class="points"></span><span class="page" data-cible="s3-3"></span></a></li>
+    <li class="n1"><a href="#s4"><span class="idx">4</span><span class="titre">Indicateurs clés</span><span class="points"></span><span class="page" data-cible="s4"></span></a></li>
+    <li class="n1"><a href="#s5"><span class="idx">5</span><span class="titre">Analyse visuelle</span><span class="points"></span><span class="page" data-cible="s5"></span></a></li>
+    <li class="n2"><a href="#s5-1"><span class="idx">5.1</span><span class="titre">Évolution temporelle du trafic</span><span class="points"></span><span class="page" data-cible="s5-1"></span></a></li>
+    <li class="n2"><a href="#s5-2"><span class="idx">5.2</span><span class="titre">Comparaison catégorielle&nbsp;: produits et pays</span><span class="points"></span><span class="page" data-cible="s5-2"></span></a></li>
+    <li class="n2"><a href="#s5-3"><span class="idx">5.3</span><span class="titre">Distribution de l’engagement par appareil</span><span class="points"></span><span class="page" data-cible="s5-3"></span></a></li>
+    <li class="n2"><a href="#s5-4"><span class="idx">5.4</span><span class="titre">Heatmap heure x jour de la semaine</span><span class="points"></span><span class="page" data-cible="s5-4"></span></a></li>
+    <li class="n2"><a href="#s5-5"><span class="idx">5.5</span><span class="titre">Compléments&nbsp;: entonnoir de conversion et corrélations</span><span class="points"></span><span class="page" data-cible="s5-5"></span></a></li>
+    <li class="n1"><a href="#s6"><span class="idx">6</span><span class="titre">Le tableau de bord Audience Lab</span><span class="points"></span><span class="page" data-cible="s6"></span></a></li>
+    <li class="n1"><a href="#s7"><span class="idx">7</span><span class="titre">Conclusions business</span><span class="points"></span><span class="page" data-cible="s7"></span></a></li>
+    <li class="n1"><a href="#s8"><span class="idx">8</span><span class="titre">Conclusions techniques et limites</span><span class="points"></span><span class="page" data-cible="s8"></span></a></li>
+    <li class="n1"><a href="#sa"><span class="idx">A</span><span class="titre">Annexes</span><span class="points"></span><span class="page" data-cible="sa"></span></a></li>
+    <li class="n2"><a href="#sa-1"><span class="idx">A.1</span><span class="titre">Exécution locale</span><span class="points"></span><span class="page" data-cible="sa-1"></span></a></li>
+    <li class="n2"><a href="#sa-2"><span class="idx">A.2</span><span class="titre">Arborescence du dépôt</span><span class="points"></span><span class="page" data-cible="sa-2"></span></a></li>
+    <li class="n2"><a href="#sa-3"><span class="idx">A.3</span><span class="titre">Correspondance avec les exigences du sujet</span><span class="points"></span><span class="page" data-cible="sa-3"></span></a></li>
+    <li class="n2"><a href="#sa-4"><span class="idx">A.4</span><span class="titre">Sources et références</span><span class="points"></span><span class="page" data-cible="sa-4"></span></a></li>
+  </ol>
+  <div class="note-sommaire">
+    <strong>Conventions.</strong> Les valeurs des données restent dans leur langue d’origine (<code>desktop</code>, <code>mobile</code>, <code>tablet</code>, <code>add_to_cart</code>, <code>begin_checkout</code>, <code>purchase</code>, <code>Apparel</code>, noms de pays en anglais)&#8239;; tout le reste est en français. Les montants sont en dollars américains (USD). Sauf mention contraire, les chiffres portent sur la période complète (1er novembre 2020 au 31 janvier 2021) et proviennent du notebook <code>notebooks/01_preparation_donnees.ipynb</code>, exécuté de bout en bout&#8239;; l’application affiche les mêmes valeurs.
+  </div>
+</section>
+
+<!-- ================================================================ 0. SYNTHÈSE -->
+<section class="section" id="s0">
+  <div class="entete-section">
+    <div class="numero">00</div>
+    <div>
+      <div class="surtitre">Résumé exécutif</div>
+      <h2>Synthèse&nbsp;: l’essentiel en une page</h2>
+    </div>
+  </div>
+
+  <p class="chapeau">Ce projet traite le trafic d’une boutique en ligne réelle, la Google Merchandise Store, comme l’audience d’un média. À partir de 758&#8239;884 événements bruts issus de Google Analytics 4, nous avons reconstitué 18&#8239;101 sessions, calculé les indicateurs clés et construit un tableau de bord interactif, Audience Lab, qui permet d’explorer cette audience par période, appareil, pays et catégorie de produit.</p>
+
+  <div class="bandeau-chiffres">
+    <div><b>18&#8239;101</b><span>sessions de 14&#8239;701 utilisateurs</span></div>
+    <div><b>24,56&#8239;%</b><span>des sessions se terminent par un achat</span></div>
+    <div><b>65,09&nbsp;USD</b><span>panier moyen d’une session avec achat</span></div>
+    <div><b>x&nbsp;2,47</b><span>trafic quotidien de décembre comparé à novembre</span></div>
+  </div>
+
+  <h3>Quatre constats</h3>
+  <div class="grille-2">
+    <div class="carte constat"><div class="pastille">1</div><div><div class="t">Une audience très saisonnière</div><p>Le trafic décolle le 24 novembre et culmine dans la première quinzaine de décembre&nbsp;: record le 8 décembre 2020 avec 527 sessions, et les cinq jours les plus actifs tombent tous entre le 1er et le 11 décembre. Le jour de Noël ne compte que 87 sessions.</p></div></div>
+    <div class="carte constat"><div class="pastille">2</div><div><div class="t">Un trafic de semaine</div><p>Le mardi (3&#8239;180 sessions) attire 1,9 fois plus de visites que le dimanche (1&#8239;673)&#8239;; le week-end ne pèse que 20,0&#8239;% des sessions. L’heure, en revanche, discrimine très peu (681 à 789 sessions selon l’heure).</p></div></div>
+    <div class="carte constat"><div class="pastille">3</div><div><div class="t">L’appareil ne fait pas la différence</div><p>Le mobile représente 39,9&#8239;% du trafic et 41,0&#8239;% des achats. Les taux de conversion sont presque identiques (24,1&#8239;% desktop, 25,2&#8239;% mobile, 23,9&#8239;% tablet), de même que les durées médianes.</p></div></div>
+    <div class="carte constat"><div class="pastille">4</div><div><div class="t">Les acheteurs se perdent au panier</div><p>Seules 35,0&#8239;% des sessions avec ajout au panier commencent un paiement, puis 47,1&#8239;% des paiements commencés aboutissent. <code>Apparel</code> porte 54,3&#8239;% du chiffre d’affaires.</p></div></div>
+  </div>
+
+  <h3>Trois recommandations prioritaires</h3>
+  <div class="encadre succes">
+    <div class="titre-encadre">À retenir pour la décision (détail en section 7)</div>
+    <ol>
+      <li><strong>Préparer la fenêtre du 23 novembre au 18 décembre</strong>, qui concentre 53,8&#8239;% des sessions en 26 jours&nbsp;: campagnes lancées avant le Black Friday, stocks et messages sur les dates limites de livraison.</li>
+      <li><strong>Travailler le passage du panier au paiement</strong>, étape où 65,0&#8239;% des sessions concernées s’arrêtent&nbsp;: relance de panier, frais de livraison affichés tôt, paiement express.</li>
+      <li><strong>Programmer les actions en semaine</strong>, mardi et mercredi en tête, et traiter le mobile à parité avec le desktop plutôt que comme un canal à «&nbsp;rattraper&nbsp;».</li>
+    </ol>
+  </div>
+
+  <p class="petit">Livrables&nbsp;: notebook de préparation (<code>notebooks/01_preparation_donnees.ipynb</code>), application Streamlit (<code>app.py</code>, en ligne à l’adresse <a href="https://audience-lab.streamlit.app">https://audience-lab.streamlit.app</a>), présent rapport et dépôt <a href="https://github.com/Abdazz/audience-lab">github.com/Abdazz/audience-lab</a>.</p>
+</section>
+
+<!-- ================================================================ 1. CONTEXTE -->
+<section class="section" id="s1">
+  <div class="entete-section">
+    <div class="numero">01</div>
+    <div>
+      <div class="surtitre">Cadre du projet</div>
+      <h2>Contexte et objectifs</h2>
+    </div>
+  </div>
+
+  <p class="chapeau">Le sujet demande de concevoir une plateforme d’analyse et de visualisation de l’audience d’un service en ligne&nbsp;: nettoyer des données de fréquentation, en extraire des indicateurs, les représenter avec Seaborn et Plotly Express, puis les intégrer dans un tableau de bord Streamlit déployé.</p>
+
+  <h3>Une boutique en ligne lue comme un média</h3>
+  <p>Le sujet autorise les médias en ligne, l’e-commerce, les réseaux sociaux ou les services publics. Nous avons retenu l’e-commerce, avec un jeu de données de mesure d’audience réel&nbsp;: celui de la Google Merchandise Store, collecté par Google Analytics 4, l’outil de référence de la mesure d’audience web. Une <strong>session</strong> y joue le rôle d’une visite, l’<strong>appareil</strong> celui du support de consultation, et l’<strong>entonnoir d’achat</strong> celui de la fidélisation d’un lectorat&nbsp;: on mesure combien de visiteurs vont au bout de leur parcours.</p>
+
+  <h3>Quatre questions directrices</h3>
+  <table>
+    <thead><tr><th style="width:30%">Question</th><th>Ce que l’on mesure</th><th style="width:22%">Onglet de l’application</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Quand</strong> les visiteurs viennent-ils&#8239;?</td><td>Saisonnalité (jour, semaine), jours et heures de pointe</td><td><span class="etiquette">Temporalité</span></td></tr>
+      <tr><td><strong>D’où et sur quel appareil</strong>&#8239;?</td><td>Parts par appareil, par pays et par catégorie de produit</td><td><span class="etiquette">Audience</span></td></tr>
+      <tr><td><strong>À quel point</strong> s’engagent-ils&#8239;?</td><td>Durée de session, nombre d’actions, valeur ajoutée au panier</td><td><span class="etiquette">Engagement</span></td></tr>
+      <tr><td><strong>Où les perd-on</strong>&#8239;?</td><td>Entonnoir <code>add_to_cart</code>, <code>begin_checkout</code>, <code>purchase</code></td><td><span class="etiquette">Conversion</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Démarche&nbsp;: de la donnée brute à la décision</h3>
+  <p>La chaîne de traitement suit les quatre étapes du cahier des charges. Chaque maillon produit un artefact versionné dans le dépôt, ce qui rend l’ensemble reproductible.</p>
+  <div class="chaine">
+    <div class="etape"><b>Données brutes</b>3 fichiers CSV (<code>data/raw/</code>), téléchargeables par script</div>
+    <div class="fleche">→</div>
+    <div class="etape"><b>Préparation</b>Notebook pandas&nbsp;: nettoyage, sessions, KPI, figures Seaborn</div>
+    <div class="fleche">→</div>
+    <div class="etape"><b>Données traitées</b>2 fichiers Parquet (4,8&nbsp;Mo au total)</div>
+    <div class="fleche">→</div>
+    <div class="etape"><b>Tableau de bord</b>Streamlit et Plotly Express, filtres, KPI, export CSV</div>
+    <div class="fleche">→</div>
+    <div class="etape"><b>Restitution</b>Rapport d’analyse et soutenance</div>
+  </div>
+
+  <h3>Outils</h3>
+  <p>Python 3.12&#8239;; pandas 3.0.6 et pyarrow 26.0.0 pour la préparation&#8239;; seaborn 0.13.2 et matplotlib 3.11.2 pour les figures statiques&#8239;; Plotly 7.1.0 et Streamlit 1.66.0 pour l’application&#8239;; pycountry pour les noms de pays&#8239;; pytest pour les tests automatisés (95 tests). Les versions sont figées dans <code>requirements.txt</code>.</p>
+
+  <div class="encadre info">
+    <div class="titre-encadre">Organisation du rapport</div>
+    <p>La section 2 présente le jeu de données et la section 3 la démarche de nettoyage, chiffrée étape par étape. La section 4 donne les indicateurs clés, la section 5 interprète chacun des graphiques imposés par le sujet, et la section 6 décrit le tableau de bord. Les sections 7 et 8 tirent les conclusions business, puis techniques, avec les limites de l’étude. Les annexes indiquent comment tout réexécuter et où trouver chaque exigence du sujet.</p>
+  </div>
+</section>
+
+<!-- ================================================================ 2. DONNÉES -->
+<section class="section" id="s2">
+  <div class="entete-section">
+    <div class="numero">02</div>
+    <div>
+      <div class="surtitre">Présentation des données</div>
+      <h2>Le jeu de données</h2>
+    </div>
+  </div>
+
+  <p class="chapeau">Les données proviennent de la Google Merchandise Store, la boutique officielle de produits dérivés Google (vêtements, sacs, papeterie, accessoires). Elles décrivent trois mois d’événements e-commerce, couvrant le Black Friday, les fêtes de fin d’année et le creux de janvier.</p>
+
+  <h3 id="s2-1"><span class="num">2.1</span>Source, licence et période</h3>
+  <table>
+    <tbody>
+      <tr><td style="width:24%"><strong>Origine</strong></td><td>Sous-ensemble du jeu public BigQuery <code>ga4_obfuscated_sample_ecommerce</code>, publié par Google comme jeu de démonstration de Google Analytics 4.</td></tr>
+      <tr><td><strong>Diffusion utilisée</strong></td><td>Observable (<code>@observablehq/google-merchandise-sales-data</code>), reprise sur Kaggle (<code>mexwell/google-merchandise-sales-data</code>). Les fichiers sont récupérés par <code>scripts/telecharger_donnees.py</code>, qui contrôle l’en-tête et le nombre de lignes de chacun.</td></tr>
+      <tr><td><strong>Licence et usage</strong></td><td>Kaggle indique une licence «&nbsp;Other&nbsp;» renvoyant à la source Observable. Il s’agit d’un jeu de démonstration diffusé publiquement par Google, utilisé ici à des fins pédagogiques non commerciales, source citée. Les identifiants sont <strong>obfusqués</strong> par Google&nbsp;: aucune donnée personnelle.</td></tr>
+      <tr><td><strong>Période</strong></td><td>Du 1er novembre 2020 (00:27:14) au 31 janvier 2021 (23:59:08), soit 92 jours.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="s2-2"><span class="num">2.2</span>Structure et variables</h3>
+  <p>Le jeu se compose de trois tables reliées par des identifiants. La table des événements est le cœur de l’analyse&#8239;; le catalogue l’enrichit des prix et des catégories&#8239;; la table des utilisateurs complète l’inventaire.</p>
+  <table>
+    <thead><tr><th>Fichier</th><th class="n">Lignes</th><th class="n">Colonnes</th><th>Contenu</th><th>Clé</th></tr></thead>
+    <tbody>
+      <tr><td><code>events.csv</code></td><td class="n">758&#8239;884</td><td class="n">7</td><td>un événement e-commerce par ligne&nbsp;: ajout au panier, début de paiement ou achat</td><td><code>user_id</code> + <code>ga_session_id</code></td></tr>
+      <tr><td><code>items.csv</code></td><td class="n">1&#8239;381</td><td class="n">6</td><td>catalogue&nbsp;: nom, marque, variante, catégorie (21 valeurs), prix de 1 à 313&nbsp;USD</td><td><code>id</code></td></tr>
+      <tr><td><code>users.csv</code></td><td class="n">270&#8239;154</td><td class="n">3</td><td>valeur vie client (<code>ltv</code>) et date de première visite</td><td><code>id</code></td></tr>
+    </tbody>
+  </table>
+
+  <table>
+    <thead><tr><th style="width:22%">Variable</th><th style="width:17%">Nature</th><th>Description et modalités</th></tr></thead>
+    <tbody>
+      <tr><td><code>date</code> devenue <code>timestamp</code></td><td><span class="etiquette bleu">temporelle</span></td><td>horodatage à la seconde de l’événement, stocké en texte dans le fichier brut</td></tr>
+      <tr><td><code>device</code></td><td><span class="etiquette">catégorielle</span></td><td><code>desktop</code> (441&#8239;521 événements bruts), <code>mobile</code> (300&#8239;628), <code>tablet</code> (16&#8239;735)</td></tr>
+      <tr><td><code>type</code></td><td><span class="etiquette">catégorielle</span></td><td><code>add_to_cart</code> (667&#8239;282), <code>begin_checkout</code> (76&#8239;047), <code>purchase</code> (15&#8239;555)</td></tr>
+      <tr><td><code>country</code></td><td><span class="etiquette">catégorielle</span></td><td>code pays ISO à deux lettres&nbsp;: 108 pays, plus 4&#8239;555 valeurs manquantes</td></tr>
+      <tr><td><code>item_category</code>, <code>item_brand</code></td><td><span class="etiquette">catégorielle</span></td><td>21 catégories (<code>Apparel</code>, <code>Bags</code>, <code>Office</code>...) et 5 marques, après jointure du catalogue</td></tr>
+      <tr><td><code>price_in_usd</code>, <code>ltv</code></td><td><span class="etiquette vert">numérique</span></td><td>prix unitaire de l’article (USD)&#8239;; valeur vie client (positive pour 4&#8239;445 utilisateurs, soit 1,6&#8239;%)</td></tr>
+      <tr><td><code>duration_s</code>, <code>n_events</code>, <code>n_items</code></td><td><span class="etiquette vert">numérique dérivée</span></td><td>durée de session (secondes), nombre d’événements, nombre d’articles distincts</td></tr>
+      <tr><td><code>cart_value_usd</code>, <code>revenue_usd</code></td><td><span class="etiquette vert">numérique dérivée</span></td><td>valeur ajoutée au panier et chiffre d’affaires de la session (somme des prix des <code>add_to_cart</code>, puis des <code>purchase</code>)</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="s2-3"><span class="num">2.3</span>Critères du sujet et justification du choix</h3>
+  <table>
+    <thead><tr><th style="width:34%">Critère du sujet (section 1.1)</th><th>Variables qui le satisfont</th><th class="c" style="width:10%">Statut</th></tr></thead>
+    <tbody>
+      <tr><td>Au moins 1 variable temporelle</td><td>horodatage à la seconde, d’où sont dérivés le jour, l’heure, le jour de la semaine et le mois</td><td class="c ok">✓</td></tr>
+      <tr><td>Au moins 2 variables numériques</td><td>prix, <code>ltv</code>, durée de session, nombre d’événements, valeur du panier, chiffre d’affaires</td><td class="c ok">✓</td></tr>
+      <tr><td>Au moins 2 variables catégorielles</td><td>appareil, type d’événement, pays, catégorie et marque de l’article</td><td class="c ok">✓</td></tr>
+    </tbody>
+  </table>
+  <p>Au-delà de ces critères, quatre raisons ont motivé ce choix&nbsp;:</p>
+  <ul>
+    <li><strong>Des données réelles de mesure d’audience</strong>, produites par l’outil le plus utilisé du secteur, plutôt qu’un jeu synthétique.</li>
+    <li><strong>Une forte saisonnalité</strong> (Black Friday, Noël, janvier) qui donne du relief à l’analyse temporelle.</li>
+    <li><strong>Un jeu relationnel</strong> (trois tables) qui exige de vrais choix de préparation&nbsp;: jointures, construction des sessions, définition des indicateurs.</li>
+    <li><strong>Un volume réaliste mais maîtrisable</strong> (41,6&nbsp;Mo de CSV pour les événements), compatible avec un déploiement gratuit sur Streamlit Community Cloud une fois converti en Parquet.</li>
+  </ul>
+</section>
+
+<!-- ================================================================ 3. NETTOYAGE -->
+<section class="section suite" id="s3">
+  <div class="entete-section">
+    <div class="numero">03</div>
+    <div>
+      <div class="surtitre">Étape 1 du cahier des charges</div>
+      <h2>Démarche de nettoyage et de préparation</h2>
+    </div>
+  </div>
+
+  <p class="chapeau">Le notebook <code>notebooks/01_preparation_donnees.ipynb</code> part des trois fichiers bruts et documente chaque décision dans une cellule de texte. Le principe directeur&nbsp;: <strong>ne rien supprimer sans preuve que la ligne est fausse</strong>, et chiffrer l’effet de chaque étape.</p>
+
+  <h3 id="s3-1"><span class="num">3.1</span>Bilan chiffré, étape par étape</h3>
+  <table>
+    <thead><tr><th style="width:4%">#</th><th style="width:22%">Étape</th><th class="n" style="width:14%">Avant</th><th class="n" style="width:14%">Après</th><th>Décision</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Lecture et inspection</td><td class="n">758&#8239;884</td><td class="n">758&#8239;884</td><td><code>info()</code>, <code>describe()</code>, cardinalités&#8239;; lecture avec <code>keep_default_na=False</code> pour que le code <code>NA</code> (Namibie) ne devienne pas une valeur manquante</td></tr>
+      <tr><td>2</td><td>Valeurs manquantes de <code>country</code></td><td class="n">4&#8239;555 manquants</td><td class="n">0 manquant</td><td>remplacées par <code>(not set)</code>, convention de Google Analytics&#8239;; aucune ligne supprimée</td></tr>
+      <tr><td>3</td><td>Doublons exacts</td><td class="n">758&#8239;884</td><td class="n">719&#8239;386</td><td>39&#8239;498 lignes (5,20&#8239;%) identiques sur les sept colonnes supprimées</td></tr>
+      <tr><td>4</td><td>Conversion des dates</td><td class="n">texte</td><td class="n">datetime64</td><td><code>pd.to_datetime</code> avec format explicite&#8239;; indexation par <code>set_index</code> et agrégation par <code>resample</code></td></tr>
+      <tr><td>5</td><td>Jointure du catalogue et des pays</td><td class="n">719&#8239;386</td><td class="n">719&#8239;386</td><td>jointure à gauche validée <code>many_to_one</code>, 0 article sans correspondance&#8239;; codes ISO-3 et noms par pycountry</td></tr>
+      <tr><td>6</td><td>Variables dérivées</td><td class="n">7 colonnes</td><td class="n">18 colonnes</td><td>jour, heure, jour de la semaine (0 = lundi), mois, clé de session</td></tr>
+      <tr><td>7</td><td>Agrégation en sessions</td><td class="n">719&#8239;386 évén.</td><td class="n">18&#8239;101 sessions</td><td>une ligne par session, 22 variables, 14&#8239;701 utilisateurs</td></tr>
+      <tr><td>8</td><td>Valeurs aberrantes (IQR)</td><td class="n">18&#8239;101</td><td class="n">18&#8239;101</td><td>3&#8239;000 sessions (16,6&#8239;%) signalées par deux indicateurs booléens, toutes conservées</td></tr>
+      <tr><td>9</td><td>Export Parquet</td><td class="n">41,7&nbsp;Mo</td><td class="n">4,8&nbsp;Mo</td><td><code>events_clean.parquet</code> (3,9&nbsp;Mo) et <code>sessions.parquet</code> (0,9&nbsp;Mo), types conservés</td></tr>
+    </tbody>
+  </table>
+  <p class="legende-tableau">Effectifs en lignes d’événements, sauf mention contraire. La taille «&nbsp;avant&nbsp;» de l’étape 9 est celle de <code>events.csv</code> et <code>items.csv</code>.</p>
+
+  <h3 id="s3-2"><span class="num">3.2</span>Décisions de nettoyage</h3>
+
+  <h4>Valeurs manquantes&nbsp;: expliciter plutôt que supprimer ou inventer</h4>
+  <p>Seule la colonne <code>country</code> présente des manquants&nbsp;: 4&#8239;555 événements, soit 0,6&#8239;%. Ils forment <strong>136 sessions entièrement sans pays</strong> et aucune session partiellement renseignée&nbsp;: il s’agit d’un échec de géolocalisation de la visite, pas d’une erreur de saisie isolée. Supprimer ces lignes ferait perdre 136 sessions réelles, avec leurs achats&#8239;; imputer le pays le plus fréquent (<code>US</code>) inventerait une information et fausserait la carte. La modalité <code>(not set)</code>, que Google Analytics emploie lui-même, reste visible et filtrable. Dans le catalogue, la colonne <code>variant</code> compte 408 manquants, mais elle n’est pas utilisée.</p>
+
+  <h4>Doublons&nbsp;: des envois répétés du marqueur</h4>
+  <p>Un doublon exact est identique sur les sept colonnes, horodatage à la seconde compris. Les 39&#8239;498 doublons concernent à 94,8&#8239;% l’événement <code>begin_checkout</code> (37&#8239;443 lignes), signe d’envois répétés du marqueur lors d’un rechargement de la page de paiement. Les conserver gonflerait les volumes et, pour <code>purchase</code> (844 doublons), compterait deux fois le même chiffre d’affaires. Limite assumée&nbsp;: deux ajouts réellement distincts du même article dans la même seconde seraient indiscernables.</p>
+
+  <h4>Dates, enrichissement et table des sessions</h4>
+  <p>La colonne <code>date</code> contient en réalité un horodatage, converti en <code>timestamp</code>&#8239;; on en dérive le jour, l’heure, le jour de la semaine et le mois (étape 1.3 du sujet). Le catalogue est joint sans perte ni duplication, et pycountry ajoute le code ISO-3 (pour la carte) et le nom anglais du pays&#8239;; le Kosovo (<code>XK</code>), absent de la norme, est complété à la main. Enfin, comme <code>ga_session_id</code> n’est unique qu’au sein d’un utilisateur (18&#8239;034 valeurs pour 18&#8239;101 sessions), la clé de session combine <code>user_id</code> et <code>ga_session_id</code>. La table des sessions agrège début, fin, durée, nombre d’événements et d’articles, valeur du panier, chiffre d’affaires et indicateurs d’étape. Des contrôles automatiques vérifient sa cohérence avec la table des événements&nbsp;: unicité de la clé, somme des événements, chiffre d’affaires, durées positives ou nulles, un seul appareil et un seul pays par session.</p>
+
+  <h3 id="s3-3"><span class="num">3.3</span>Valeurs aberrantes&nbsp;: signaler plutôt que supprimer</h3>
+  <p>La règle de Tukey (valeur au-dessus de Q3 + 1,5&nbsp;x IQR) est appliquée aux deux mesures d’engagement, sur l’ensemble des sessions. La borne basse, négative ou nulle, est sans objet.</p>
+  <figure class="reduite">
+    <div class="cadre"><img src="figures/valeurs_aberrantes.png" alt="Boxplots de la durée de session et du nombre d'événements avec la borne IQR"></div>
+    <figcaption><b>Figure 1. Boxplots avant décision.</b> La ligne rouge marque la borne Q3 + 1,5&nbsp;x IQR. Durée&nbsp;: Q1 = 0&nbsp;s, Q3 = 364&nbsp;s, borne de 910&nbsp;s, dépassée par 2&#8239;075 sessions (11,5&#8239;%), maximum 16&#8239;196&nbsp;s. Événements&nbsp;: Q1 = 12, Q3 = 45, borne de 94,5, dépassée par 1&#8239;901 sessions (10,5&#8239;%), maximum 927. Source&nbsp;: notebook, section 8.</figcaption>
+  </figure>
+  <div class="encadre">
+    <div class="titre-encadre">Pourquoi conserver ces 3&#8239;000 sessions</div>
+    <p>Les boxplots montrent une queue continue, pas quelques points isolés&nbsp;: ce sont de vrais comportements (grosses commandes, onglet resté ouvert). Surtout, ces sessions convertissent à 47,1&#8239;% contre 20,1&#8239;% pour les sessions typiques, ont un panier moyen de 3&#8239;074&nbsp;USD contre 514&nbsp;USD et apportent <strong>42,4&#8239;% du chiffre d’affaires</strong> (122&#8239;823&nbsp;USD). Les supprimer fausserait tous les indicateurs business. Elles sont donc signalées par <code>is_outlier_duration</code> et <code>is_outlier_events</code>, et les graphiques de distribution passent en échelle logarithmique plutôt que de les couper.</p>
+  </div>
+</section>
+
+<!-- ================================================================ 4. KPI -->
+<section class="section" id="s4">
+  <div class="entete-section">
+    <div class="numero">04</div>
+    <div>
+      <div class="surtitre">Étape 2 du cahier des charges</div>
+      <h2>Indicateurs clés</h2>
+    </div>
+  </div>
+
+  <p class="chapeau">Les indicateurs sont calculés sur toutes les sessions, y compris celles signalées comme aberrantes. Ce sont exactement les six cartes du bandeau de l’application, ici sur la période complète et sans filtre.</p>
+
+  <div class="kpis">
+    <div class="kpi"><div class="libelle">Sessions</div><div class="valeur">18&#8239;101</div><div class="detail">volume total de visites&#8239;; 719&#8239;386 événements</div></div>
+    <div class="kpi"><div class="libelle">Utilisateurs</div><div class="valeur">14&#8239;701</div><div class="detail">dont 2&#8239;374 reviennent au moins une fois</div></div>
+    <div class="kpi"><div class="libelle">Durée moyenne</div><div class="valeur">5&nbsp;min&nbsp;41&nbsp;s</div><div class="detail">341,48&nbsp;s en moyenne, mais 66&nbsp;s en médiane</div></div>
+    <div class="kpi"><div class="libelle">Panier moyen</div><div class="valeur">65,09&nbsp;USD</div><div class="detail">montant moyen d’une session avec achat (médiane 47&nbsp;USD)</div></div>
+    <div class="kpi"><div class="libelle">Taux de conversion</div><div class="valeur">24,56&#8239;%</div><div class="detail">4&#8239;446 sessions contiennent au moins un achat</div></div>
+    <div class="kpi"><div class="libelle">Part mobile</div><div class="valeur">39,95&#8239;%</div><div class="detail">7&#8239;231 sessions mobile&#8239;; 41,0&#8239;% des achats</div></div>
+  </div>
+
+  <div class="grille-2">
+    <div>
+      <h4>Indicateurs complémentaires</h4>
+      <table>
+        <thead><tr><th>Indicateur</th><th class="n">Valeur</th></tr></thead>
+        <tbody>
+          <tr><td>Chiffre d’affaires total</td><td class="n">289&#8239;407&nbsp;USD</td></tr>
+          <tr><td>Chiffre d’affaires par session</td><td class="n">15,99&nbsp;USD</td></tr>
+          <tr><td>Taux de passage au paiement</td><td class="n">40,37&#8239;%</td></tr>
+          <tr><td>Événements par session (moyenne / médiane)</td><td class="n">39,74 / 16</td></tr>
+          <tr><td>Valeur ajoutée au panier par session</td><td class="n">938,63&nbsp;USD</td></tr>
+          <tr><td>Part de la valeur du panier achetée</td><td class="n">1,7&#8239;%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h4>Audience par pays (sessions)</h4>
+      <table>
+        <thead><tr><th>Pays</th><th class="n">Sessions</th><th class="n">Part</th></tr></thead>
+        <tbody>
+          <tr><td>United States</td><td class="n">7&#8239;993</td><td class="n">44,2&#8239;%</td></tr>
+          <tr><td>India</td><td class="n">1&#8239;667</td><td class="n">9,2&#8239;%</td></tr>
+          <tr><td>Canada</td><td class="n">1&#8239;408</td><td class="n">7,8&#8239;%</td></tr>
+          <tr><td>United Kingdom</td><td class="n">554</td><td class="n">3,1&#8239;%</td></tr>
+          <tr><td>France</td><td class="n">356</td><td class="n">2,0&#8239;%</td></tr>
+          <tr class="total"><td>Top 10 (sur 108 pays et <code>(not set)</code>)</td><td class="n">13&#8239;470</td><td class="n">74,4&#8239;%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h4>Répartition de l’audience par appareil</h4>
+  <table>
+    <thead><tr><th>Appareil</th><th class="n">Sessions</th><th class="n">Part du trafic</th><th class="n">Conversion</th><th class="n">Durée médiane</th><th class="n">Chiffre d’affaires</th><th class="n">Part du CA</th></tr></thead>
+    <tbody>
+      <tr><td><code>desktop</code></td><td class="n">10&#8239;489</td><td class="n">57,9&#8239;%</td><td class="n">24,1&#8239;%</td><td class="n">64&nbsp;s</td><td class="n">167&#8239;178&nbsp;USD</td><td class="n">57,8&#8239;%</td></tr>
+      <tr><td><code>mobile</code></td><td class="n">7&#8239;231</td><td class="n">39,9&#8239;%</td><td class="n">25,2&#8239;%</td><td class="n">69&nbsp;s</td><td class="n">116&#8239;474&nbsp;USD</td><td class="n">40,2&#8239;%</td></tr>
+      <tr><td><code>tablet</code></td><td class="n">381</td><td class="n">2,1&#8239;%</td><td class="n">23,9&#8239;%</td><td class="n">69&nbsp;s</td><td class="n">5&#8239;755&nbsp;USD</td><td class="n">2,0&#8239;%</td></tr>
+      <tr class="total"><td>Ensemble</td><td class="n">18&#8239;101</td><td class="n">100&#8239;%</td><td class="n">24,56&#8239;%</td><td class="n">66&nbsp;s</td><td class="n">289&#8239;407&nbsp;USD</td><td class="n">100&#8239;%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="encadre alerte">
+    <div class="titre-encadre">Deux définitions à ne pas confondre</div>
+    <p>Le <strong>panier moyen</strong> (65,09&nbsp;USD) est le montant moyen d’une session <em>avec achat</em>&nbsp;: c’est l’indicateur retenu dans le bandeau. La <strong>valeur ajoutée au panier</strong> (938,63&nbsp;USD par session) additionne les prix de tous les <code>add_to_cart</code>, même si un article est ajouté plusieurs fois et jamais acheté&nbsp;: seuls 1,7&#8239;% de cette valeur sont finalement achetés. Elle mesure l’intérêt, pas la dépense. De même, la durée <strong>médiane</strong> (66&nbsp;s) décrit mieux la session typique que la moyenne (341,48&nbsp;s), tirée par une longue traîne.</p>
+  </div>
+  <p class="source">Calcul complémentaire pour ce rapport, à partir de <code>data/processed/</code>&nbsp;: part du chiffre d’affaires par appareil et total du top 10 des pays. Toutes les autres valeurs figurent dans le notebook (section 9).</p>
+</section>
+
+<!-- ================================================================ 5. ANALYSE VISUELLE -->
+<section class="section" id="s5">
+  <div class="entete-section">
+    <div class="numero">05</div>
+    <div>
+      <div class="surtitre">Étape 3 du cahier des charges</div>
+      <h2>Analyse visuelle</h2>
+    </div>
+  </div>
+
+  <p class="chapeau">Chaque visualisation imposée par le sujet a sa version statique Seaborn dans le notebook (reproduite ici à 200&nbsp;dpi) et sa version interactive Plotly Express dans l’application, où elle réagit aux filtres. Les quatre premières sous-sections suivent l’ordre du sujet&#8239;; la dernière ajoute deux analyses utiles à la décision.</p>
+
+  <h3 id="s5-1"><span class="num">5.1</span>Évolution temporelle du trafic</h3>
+  <figure>
+    <div class="cadre"><img src="figures/evolution_trafic.png" alt="Courbe des sessions par jour avec moyenne mobile sur 7 jours et repères Black Friday, Cyber Monday et Noël"></div>
+    <figcaption><b>Figure 2. Sessions par jour et moyenne mobile sur 7 jours.</b> Lignes verticales&nbsp;: Black Friday (27/11), Cyber Monday (30/11), Noël (25/12). Seaborn et matplotlib, <code>resample("D")</code> sur le début de session. Dans l’application&nbsp;: <code>px.line</code>, granularité jour ou semaine, détail par appareil. Source&nbsp;: notebook, section 10.1.</figcaption>
+  </figure>
+  <div class="lecture">
+    <div class="item"><b>527 sessions</b><span>record du 8 décembre 2020&#8239;; les 5 jours les plus actifs tombent entre le 1er et le 11 décembre</span></div>
+    <div class="item"><b>x&nbsp;2,47</b><span>sessions par jour en décembre (303,3) comparées à novembre (122,9)&#8239;; janvier&nbsp;: 161,6</span></div>
+    <div class="item"><b>87 sessions</b><span>le jour de Noël, contre 463 au Cyber Monday et 357 au Black Friday</span></div>
+  </div>
+  <p><strong>Lecture.</strong> La courbe dessine trois régimes. Début novembre, le trafic est faible. Il décolle le 24 novembre (201 sessions, contre 80 la veille et 27 le 22), juste avant le Black Friday, puis reste au-dessus de 400 sessions par jour en moyenne mobile pendant la première quinzaine de décembre&nbsp;: la semaine du 7 décembre totalise 3&#8239;041 sessions. Le Black Friday et le Cyber Monday lancent la saison, mais <strong>le pic est la période des commandes de Noël</strong>, avant les dates limites de livraison. Le trafic s’effondre ensuite (87 sessions le 25 décembre) puis reprend modérément en janvier.</p>
+  <p><strong>Interprétation.</strong> La boutique fonctionne comme un média saisonnier&nbsp;: décembre réunit 51,9&#8239;% des sessions et 45,4&#8239;% du chiffre d’affaires. Une partie de la faiblesse de début novembre tient toutefois à la collecte elle-même&nbsp;: avant le 16 novembre, seuls les achats sont enregistrés (section 8). La comparaison novembre-décembre surestime donc un peu l’écart, sans en changer le sens.</p>
+  <table>
+    <thead><tr><th>Mois</th><th class="n">Sessions</th><th class="n">Part des sessions</th><th class="n">Sessions par jour</th><th class="n">Chiffre d’affaires</th><th class="n">Part du CA</th></tr></thead>
+    <tbody>
+      <tr><td>Novembre 2020</td><td class="n">3&#8239;688</td><td class="n">20,4&#8239;%</td><td class="n">122,9</td><td class="n">107&#8239;142&nbsp;USD</td><td class="n">37,0&#8239;%</td></tr>
+      <tr><td>Décembre 2020</td><td class="n">9&#8239;403</td><td class="n">51,9&#8239;%</td><td class="n">303,3</td><td class="n">131&#8239;454&nbsp;USD</td><td class="n">45,4&#8239;%</td></tr>
+      <tr><td>Janvier 2021</td><td class="n">5&#8239;010</td><td class="n">27,7&#8239;%</td><td class="n">161,6</td><td class="n">50&#8239;811&nbsp;USD</td><td class="n">17,6&#8239;%</td></tr>
+    </tbody>
+  </table>
+  <p class="legende-tableau">Sessions et chiffre d’affaires par mois&nbsp;: calcul complémentaire sur <code>data/processed/sessions.parquet</code>&#8239;; sessions par jour&nbsp;: notebook, section 10.1.</p>
+
+  <h3 id="s5-2"><span class="num">5.2</span>Comparaison catégorielle&nbsp;: produits et pays</h3>
+  <figure>
+    <div class="cadre"><img src="figures/categories.png" alt="Barres horizontales des ajouts au panier et du chiffre d'affaires par catégorie de produit"></div>
+    <figcaption><b>Figure 3. Intérêt (ajouts au panier) et ventes (chiffre d’affaires) par catégorie.</b> <code>sns.barplot</code>, catégories triées par volume d’événements. Dans l’application&nbsp;: <code>px.bar</code> avec choix de la mesure, et <code>px.pie</code> en anneau pour les parts par appareil. Source&nbsp;: notebook, section 10.2.</figcaption>
+  </figure>
+  <table>
+    <thead><tr><th>Catégorie</th><th class="n">Ajouts au panier</th><th class="n">Achats</th><th class="n">Chiffre d’affaires</th><th class="n">Part du CA</th><th class="n">Achats pour 100 ajouts</th><th class="n">Prix moyen d’achat</th></tr></thead>
+    <tbody>
+      <tr><td><code>Apparel</code></td><td class="n">265&#8239;434</td><td class="n">4&#8239;858</td><td class="n">157&#8239;235&nbsp;USD</td><td class="n">54,3&#8239;%</td><td class="n">1,83</td><td class="n">32,37&nbsp;USD</td></tr>
+      <tr><td><code>Bags</code></td><td class="n">23&#8239;851</td><td class="n">671</td><td class="n">19&#8239;137&nbsp;USD</td><td class="n">6,6&#8239;%</td><td class="n">2,81</td><td class="n">28,52&nbsp;USD</td></tr>
+      <tr><td><code>New</code></td><td class="n">65&#8239;046</td><td class="n">1&#8239;397</td><td class="n">18&#8239;506&nbsp;USD</td><td class="n">6,4&#8239;%</td><td class="n">2,15</td><td class="n">13,25&nbsp;USD</td></tr>
+      <tr><td><code>Office</code></td><td class="n">23&#8239;343</td><td class="n">798</td><td class="n">4&#8239;501&nbsp;USD</td><td class="n">1,6&#8239;%</td><td class="n">3,42</td><td class="n">5,64&nbsp;USD</td></tr>
+      <tr><td><code>Notebooks &amp; Journals</code></td><td class="n">16&#8239;514</td><td class="n">36</td><td class="n">246&nbsp;USD</td><td class="n">0,1&#8239;%</td><td class="n">0,22</td><td class="n">6,83&nbsp;USD</td></tr>
+    </tbody>
+  </table>
+  <p><strong>Lecture.</strong> <code>Apparel</code> écrase toutes les autres catégories&nbsp;: 39,3&#8239;% des événements, 265&#8239;434 ajouts au panier et 54,3&#8239;% du chiffre d’affaires. Les trois premières catégories réunissent 58,8&#8239;% des ajouts au panier.</p>
+  <p><strong>Interprétation.</strong> L’intérêt ne se traduit pas toujours en ventes. <code>Bags</code> n’est que 8e en ajouts au panier mais <strong>2e en chiffre d’affaires</strong>&nbsp;: ce n’est pas un effet de prix (28,52&nbsp;USD par achat contre 32,37&nbsp;USD pour <code>Apparel</code>), mais une meilleure transformation, avec 2,81 achats pour 100 ajouts contre 1,83. À l’inverse, <code>Notebooks &amp; Journals</code> cumule 16&#8239;514 ajouts pour 36 achats seulement (0,22 pour 100)&nbsp;: une catégorie très regardée, presque jamais achetée, qui mérite un audit. Les catégories marginales (<code>Fun</code>, <code>Eco-Friendly</code>, <code>Gift Cards</code>, <code>Black Lives Matter</code>) pèsent moins de 1&#8239;% des événements.</p>
+  <p><strong>Pays.</strong> L’audience est d’abord américaine&nbsp;: 44,2&#8239;% des sessions viennent des États-Unis, 61,1&#8239;% des trois premiers pays (avec l’Inde et le Canada) et 74,4&#8239;% du top 10. La conversion y est comparable (24,2&#8239;% aux États-Unis, 24,9&#8239;% en Inde, 25,4&#8239;% au Canada)&nbsp;: la carte choroplèthe de l’application (<code>px.choropleth</code>) montre donc surtout où se trouve le volume, pas un écart de qualité entre marchés.</p>
+
+  <h3 id="s5-3"><span class="num">5.3</span>Distribution de l’engagement par appareil</h3>
+  <figure>
+    <div class="cadre"><img src="figures/engagement_appareil.png" alt="Boxplot et histogramme avec densité de la durée de session par appareil, en échelle logarithmique"></div>
+    <figcaption><b>Figure 4. Durée de session par appareil, en échelle logarithmique.</b> À gauche <code>sns.boxplot</code>, à droite <code>sns.histplot(kde=True)</code> avec une aire normalisée par appareil. Les sessions de durée nulle sont exclues de ces deux graphiques seulement. Dans l’application&nbsp;: <code>px.box</code> et <code>px.histogram</code>, pour la durée, le nombre d’actions ou la valeur du panier. Source&nbsp;: notebook, section 10.3.</figcaption>
+  </figure>
+  <div class="lecture">
+    <div class="item"><b>32,7&#8239;%</b><span>des sessions (5&#8239;922) ont une durée nulle&nbsp;: un seul horodatage&#8239;; 33,0&#8239;% desktop, 32,3&#8239;% mobile, 33,3&#8239;% tablet</span></div>
+    <div class="item"><b>197 / 196 / 208&nbsp;s</b><span>durées médianes desktop / mobile / tablet, parmi les sessions de durée positive</span></div>
+    <div class="item"><b>580 à 627&nbsp;s</b><span>troisième quartile selon l’appareil&#8239;; maximum 16&#8239;196&nbsp;s sur desktop, 6&#8239;895&nbsp;s sur mobile</span></div>
+  </div>
+  <p><strong>Lecture.</strong> Les trois boîtes sont presque superposées et les densités ont la même forme. La seule différence visible est l’extrémité de la queue, plus longue sur desktop. L’histogramme de la tablette est plus irrégulier car il ne repose que sur 254 sessions de durée positive.</p>
+  <p><strong>Interprétation.</strong> La densité est <strong>bimodale</strong>&nbsp;: un premier mode vers 80&nbsp;s correspond à des visites éclairs (un ou deux ajouts au panier), un second, plus large, entre 200 et 1&#8239;000&nbsp;s, à des sessions de composition de panier. Ces deux usages existent sur chaque appareil dans les mêmes proportions&nbsp;: <strong>l’appareil ne différencie pas l’engagement</strong> dans ce jeu. La densité de la valeur du panier le confirme, avec un panier médian identique de 382&nbsp;USD sur les trois appareils (valeur qui reflète l’artefact d’obfuscation décrit en section 8).</p>
+
+  <h3 id="s5-4"><span class="num">5.4</span>Heatmap heure x jour de la semaine</h3>
+  <figure>
+    <div class="cadre"><img src="figures/heatmap_heure_jour.png" alt="Heatmap annotée du nombre de sessions par heure et par jour de la semaine"></div>
+    <figcaption><b>Figure 5. Sessions selon l’heure et le jour de début de session.</b> <code>sns.heatmap(annot=True, cmap="Blues")</code>&nbsp;: palette séquentielle à une seule teinte, adaptée à des effectifs. Grille complète de 7&nbsp;x&nbsp;24 cases. Dans l’application&nbsp;: <code>px.imshow</code>. Source&nbsp;: notebook, section 10.4.</figcaption>
+  </figure>
+  <div class="lecture">
+    <div class="item"><b>3&#8239;180 contre 1&#8239;673</b><span>sessions le mardi et le dimanche, soit un rapport de 1,9</span></div>
+    <div class="item"><b>20,0&#8239;%</b><span>des sessions seulement ont lieu le week-end (samedi 1&#8239;951, dimanche 1&#8239;673)</span></div>
+    <div class="item"><b>681 à 789</b><span>sessions selon l’heure (12&nbsp;h et 3&nbsp;h)&#8239;; case maximale&nbsp;: mardi à 13&nbsp;h, 159 sessions</span></div>
+  </div>
+  <p><strong>Lecture.</strong> Les lignes du samedi et du dimanche sont les plus claires à presque toutes les heures, tandis que celles du mardi et du mercredi (3&#8239;180 et 3&#8239;150 sessions) sont les plus foncées. Les colonnes, elles, se ressemblent&nbsp;: aucun creux nocturne ne se dessine.</p>
+  <p><strong>Interprétation.</strong> <strong>Le jour de la semaine structure le trafic, l’heure presque pas.</strong> Le profil de semaine est compatible avec des achats faits depuis le bureau ou pour l’entreprise. L’absence de cycle jour et nuit est en revanche surprenante pour une audience à 44&#8239;% américaine&nbsp;: elle peut venir de la diversité des fuseaux des visiteurs ou de l’obfuscation des horodatages, d’autant que le fuseau des données n’est pas documenté. Les conclusions horaires se lisent donc comme des tendances relatives, et les recommandations portent sur le jour plutôt que sur l’heure.</p>
+
+  <h3 id="s5-5"><span class="num">5.5</span>Compléments&nbsp;: entonnoir de conversion et corrélations</h3>
+  <figure>
+    <div class="cadre"><img src="figures/entonnoir.png" alt="Entonnoir des sessions atteignant chaque étape et parts par appareil"></div>
+    <figcaption><b>Figure 6. Entonnoir de conversion, global et par appareil.</b> Une session compte pour une étape si elle contient au moins un événement de ce type. Dans l’application&nbsp;: <code>px.funnel</code> empilé par appareil. Source&nbsp;: notebook, section 10.6.</figcaption>
+  </figure>
+  <p><strong>Lecture.</strong> 15&#8239;188 sessions (83,9&#8239;%) contiennent un ajout au panier, 7&#8239;308 (40,4&#8239;%) un début de paiement et 4&#8239;446 (24,6&#8239;%) un achat, avec des parts quasi identiques sur les trois appareils. L’entonnoir n’est cependant pas un chemin strict&nbsp;: 2&#8239;913 sessions n’ont aucun <code>add_to_cart</code>, dont 1&#8239;993 qui commencent pourtant un paiement, et 1&#8239;006 sessions achètent sans <code>begin_checkout</code>. Le rapport des effectifs d’une étape à l’autre n’est donc pas une probabilité de passage&#8239;; on calcule des <strong>taux conditionnels</strong> sur les mêmes sessions.</p>
+  <div class="grille-2">
+    <div>
+      <table>
+        <thead><tr><th>Passage</th><th class="n">Taux conditionnel</th></tr></thead>
+        <tbody>
+          <tr><td><code>add_to_cart</code> vers <code>begin_checkout</code></td><td class="n">35,0&#8239;%</td></tr>
+          <tr><td><code>begin_checkout</code> vers <code>purchase</code></td><td class="n">47,1&#8239;%</td></tr>
+          <tr><td><code>add_to_cart</code> vers <code>purchase</code></td><td class="n">16,9&#8239;%</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Interprétation.</strong> La plus grosse perte se situe <strong>entre le panier et le paiement</strong>&nbsp;: 65,0&#8239;% des sessions avec ajout au panier s’arrêtent là, contre 52,9&#8239;% entre paiement et achat. C’est le panier, plus encore que le tunnel de paiement, qu’il faut travailler.</p>
+    </div>
+    <figure style="margin-top:2mm">
+      <div class="cadre"><img src="figures/correlation.png" alt="Matrice de corrélation de Pearson des variables numériques de session"></div>
+      <figcaption><b>Figure 7. Corrélations de Pearson entre variables de session.</b> <code>sns.heatmap</code>, palette divergente. Source&nbsp;: notebook, section 10.5.</figcaption>
+    </figure>
+  </div>
+  <p><strong>Corrélations.</strong> Le nombre d’événements et la valeur du panier sont très liés (0,90), en partie mécaniquement&nbsp;: 92,6&#8239;% des événements sont des ajouts au panier. La durée et le nombre d’événements ne sont corrélés qu’à 0,55 en Pearson mais à 0,71 en Spearman&nbsp;: la relation est croissante mais non linéaire. Surtout, <strong>le chiffre d’affaires est faiblement corrélé à tout le reste</strong> (0,20 à 0,33)&nbsp;: une session longue et chargée ne garantit pas un achat, ce qui rejoint le constat de l’entonnoir.</p>
+</section>
+
+<!-- ================================================================ 6. TABLEAU DE BORD -->
+<section class="section" id="s6">
+  <div class="entete-section">
+    <div class="numero">06</div>
+    <div>
+      <div class="surtitre">Étape 4 du cahier des charges</div>
+      <h2>Le tableau de bord Audience Lab</h2>
+    </div>
+  </div>
+
+  <p class="chapeau">L’application Streamlit rassemble toutes les analyses sur une page&nbsp;: une barre latérale de filtres, un bandeau de six indicateurs toujours visible et six onglets qui reprennent les quatre questions directrices. Elle est en ligne à l’adresse <a href="https://audience-lab.streamlit.app">https://audience-lab.streamlit.app</a>.</p>
+
+  <figure>
+    <div class="capture"><img src="../docs/captures/accueil_clair.png" alt="Accueil du tableau de bord en thème clair : filtres, bandeau de KPI et constats"></div>
+    <figcaption><b>Figure 8. Accueil en thème clair.</b> À gauche, les filtres (<code>st.sidebar</code>) et l’export CSV&#8239;; en haut, les six <code>st.metric</code> avec leur variation et leur petite courbe&#8239;; en dessous, l’onglet Synthèse et ses constats rédigés automatiquement à partir des données filtrées.</figcaption>
+  </figure>
+
+  <div class="grille-2">
+    <figure>
+      <div class="capture" style="aspect-ratio: 1600 / 940"><img style="margin-top: -3.75%" src="../docs/captures/temporalite.png" alt="Onglet Temporalité en thème sombre"></div>
+      <figcaption><b>Figure 9. Temporalité.</b> Courbe <code>px.line</code> (jour ou semaine, détail par appareil) avec repères calendaires, puis heatmap heure x jour.</figcaption>
+    </figure>
+    <figure>
+      <div class="capture" style="aspect-ratio: 1600 / 940"><img style="margin-top: -3.75%" src="../docs/captures/audience.png" alt="Onglet Audience en thème sombre"></div>
+      <figcaption><b>Figure 10. Audience.</b> Anneau des appareils, barres des catégories (ajouts au panier ou chiffre d’affaires), carte et top 10 des pays.</figcaption>
+    </figure>
+    <figure>
+      <div class="capture" style="aspect-ratio: 1600 / 950"><img style="margin-top: -3.125%" src="../docs/captures/engagement.png" alt="Onglet Engagement en thème sombre"></div>
+      <figcaption><b>Figure 11. Engagement.</b> Boîtes et distributions par appareil pour trois métriques, avec échelle logarithmique activable.</figcaption>
+    </figure>
+    <figure>
+      <div class="capture" style="aspect-ratio: 1600 / 815"><img style="margin-top: -11.5625%" src="../docs/captures/conversion.png" alt="Onglet Conversion en thème sombre"></div>
+      <figcaption><b>Figure 12. Conversion.</b> Entonnoir empilé par appareil et cartes de conversion par appareil, avec l’étape de plus forte perte calculée.</figcaption>
+    </figure>
+  </div>
+
+  <h3>Fonctionnalités et API du cours</h3>
+  <table>
+    <thead><tr><th style="width:30%">Exigence du sujet</th><th>Mise en œuvre dans <code>app.py</code></th></tr></thead>
+    <tbody>
+      <tr><td>Filtrage dynamique (<code>st.sidebar</code>)</td><td>période (plage de dates bornée aux données), appareils, pays (classés par fréquence), catégories&#8239;; bouton «&nbsp;Réinitialiser les filtres&nbsp;»</td></tr>
+      <tr><td>Métriques clés (<code>st.metric</code>)</td><td>sessions, utilisateurs, durée moyenne, panier moyen, taux de conversion, part mobile&#8239;; variation et petite courbe quotidienne</td></tr>
+      <tr><td>Graphiques Plotly Express (<code>st.plotly_chart</code>)</td><td><code>px.line</code>, <code>px.imshow</code>, <code>px.pie</code>, <code>px.bar</code>, <code>px.choropleth</code>, <code>px.box</code>, <code>px.histogram</code>, <code>px.funnel</code>&#8239;; survol en valeurs réelles, export PNG</td></tr>
+      <tr><td>Export CSV (<code>st.download_button</code>)</td><td>sessions filtrées, toutes colonnes, encodage UTF-8 avec BOM (lisible par Excel)&#8239;; aussi proposé dans l’onglet Données</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Choix de conception</h3>
+  <div class="grille-2">
+    <div class="carte"><h4>Deux thèmes cohérents</h4><p>Un thème sombre par défaut, adapté à la projection, et un thème clair, au choix par une bascule. Le CSS et chaque figure Plotly (fond, texte, palette) suivent le thème&#8239;; les couleurs des appareils restent identiques d’un graphique à l’autre.</p></div>
+    <div class="carte"><h4>Des variations honnêtes</h4><p>Chaque carte compare la sélection à la période précédente de même durée. Si celle-ci sort des données, ce qui est le cas de la vue par défaut, l’application compare la seconde moitié de la période à la première et l’annonce en clair&#8239;; un seul jour sélectionné n’affiche pas de variation.</p></div>
+    <div class="carte"><h4>Lisible et robuste</h4><p>Typographie française (espaces insécables, virgule décimale), valeurs de données en anglais, légende chiffrée sous chaque graphique, message «&nbsp;Aucune donnée pour ces filtres&nbsp;» au lieu d’une erreur. Une page «&nbsp;Données&nbsp;» montre l’aperçu des sessions filtrées.</p></div>
+    <div class="carte"><h4>Rapide en ligne</h4><p>Données en Parquet, chargement et filtrage mis en cache (<code>st.cache_data</code>), onglets calculés seulement à l’ouverture&nbsp;: de 0,1 à 0,4&nbsp;s par interaction en local. 95 tests automatisés couvrent données, indicateurs, graphiques et application.</p></div>
+  </div>
+</section>
+
+<!-- ================================================================ 7. BUSINESS -->
+<section class="section" id="s7">
+  <div class="entete-section">
+    <div class="numero">07</div>
+    <div>
+      <div class="surtitre">Ce que l’analyse change pour la boutique</div>
+      <h2>Conclusions business</h2>
+    </div>
+  </div>
+
+  <p class="chapeau">Les constats convergent&nbsp;: l’audience se joue sur quelques semaines de fin d’année et en semaine, elle se comporte de la même façon quel que soit l’appareil, et la boutique perd l’essentiel de ses acheteurs potentiels entre le panier et le paiement. Six recommandations en découlent, de la plus à la moins prioritaire.</p>
+
+  <div class="reco"><div class="rang">1</div><div>
+    <div class="t">Préparer la fenêtre du 23 novembre au 18 décembre</div>
+    <p>Ces 26 jours (28&#8239;% de la période) concentrent 9&#8239;744 sessions, soit 53,8&#8239;% du trafic. Les campagnes doivent être lancées avant le Black Friday, les stocks des best-sellers sécurisés pour début décembre et les dates limites de livraison mises en avant, puisque le pic coïncide avec les commandes de Noël et non avec le Black Friday lui-même.</p>
+    <div class="appui">Appui&nbsp;: figure 2&#8239;; record de 527 sessions le 8 décembre&#8239;; 87 sessions le jour de Noël.</div>
+  </div></div>
+
+  <div class="reco"><div class="rang">2</div><div>
+    <div class="t">Réduire l’abandon entre le panier et le paiement</div>
+    <p>Seules 35,0&#8239;% des sessions avec ajout au panier commencent un paiement, alors que 47,1&#8239;% des paiements commencés aboutissent. Les leviers relèvent du panier&nbsp;: frais et délais de livraison affichés dès le panier, relance des paniers abandonnés (le panier est souvent constitué puis payé plus tard), bouton de paiement express. À suivre avec le taux conditionnel <code>add_to_cart</code> vers <code>begin_checkout</code> comme indicateur principal.</p>
+    <div class="appui">Appui&nbsp;: figure 6&#8239;; 65,0&#8239;% de perte à cette étape&#8239;; 1,7&#8239;% de la valeur ajoutée au panier est achetée.</div>
+  </div></div>
+
+  <div class="reco"><div class="rang">3</div><div>
+    <div class="t">Programmer les actions en semaine</div>
+    <p>Mardi et mercredi sont les jours les plus actifs, le week-end ne pèse que 20,0&#8239;% des sessions. Les envois de courriels, mises en avant et lancements de produits gagnent à être planifiés en début de semaine. L’heure, peu discriminante et de fuseau incertain, ne justifie pas d’optimisation fine à ce stade.</p>
+    <div class="appui">Appui&nbsp;: figure 5&#8239;; mardi 3&#8239;180 sessions contre 1&#8239;673 le dimanche.</div>
+  </div></div>
+
+  <div class="reco"><div class="rang">4</div><div>
+    <div class="t">Traiter le mobile à parité, pas comme un problème</div>
+    <p>Le mobile convertit au moins aussi bien que le desktop (25,2&#8239;% contre 24,1&#8239;%) et pèse 40,2&#8239;% du chiffre d’affaires. Aucun écart de comportement ne justifie un chantier mobile spécifique&#8239;; l’enjeu est de maintenir la parité, en testant chaque évolution du tunnel d’achat sur les deux supports.</p>
+    <div class="appui">Appui&nbsp;: tableau des appareils (section 4)&#8239;; figure 4&#8239;; durées médianes de 64 à 69&nbsp;s.</div>
+  </div></div>
+
+  <div class="reco"><div class="rang">5</div><div>
+    <div class="t">Piloter l’assortiment par la transformation, pas seulement par le volume</div>
+    <p><code>Apparel</code> reste le pilier (54,3&#8239;% du chiffre d’affaires) et doit être protégé en stock. <code>Bags</code> transforme mieux ses ajouts au panier (2,81 achats pour 100 contre 1,83)&nbsp;: il mérite davantage de visibilité. <code>Notebooks &amp; Journals</code>, avec 16&#8239;514 ajouts pour 36 achats, appelle un audit (prix, disponibilité, fiche produit, éventuel défaut de suivi).</p>
+    <div class="appui">Appui&nbsp;: figure 3 et tableau des catégories (section 5.2).</div>
+  </div></div>
+
+  <div class="reco"><div class="rang">6</div><div>
+    <div class="t">Considérer l’Inde et le Canada comme des relais de croissance</div>
+    <p>Hors États-Unis (44,2&#8239;% des sessions), l’Inde (9,2&#8239;%) et le Canada (7,8&#8239;%) convertissent au même niveau (24,9&#8239;% et 25,4&#8239;%). Une offre localisée (affichage des prix, conditions de livraison) y aurait un rendement comparable à celui du marché principal.</p>
+    <div class="appui">Appui&nbsp;: tableau des pays (section 4)&#8239;; carte de l’onglet Audience.</div>
+  </div></div>
+
+  <h3>Indicateurs de pilotage proposés</h3>
+  <table>
+    <thead><tr><th>Indicateur</th><th class="n">Valeur de référence</th><th>Pourquoi le suivre</th></tr></thead>
+    <tbody>
+      <tr><td>Passage <code>add_to_cart</code> vers <code>begin_checkout</code></td><td class="n">35,0&#8239;%</td><td>mesure directe de la recommandation 2</td></tr>
+      <tr><td>Passage <code>begin_checkout</code> vers <code>purchase</code></td><td class="n">47,1&#8239;%</td><td>santé du tunnel de paiement</td></tr>
+      <tr><td>Taux de conversion des sessions</td><td class="n">24,56&#8239;%</td><td>indicateur global, déjà dans le bandeau</td></tr>
+      <tr><td>Panier moyen (sessions avec achat)</td><td class="n">65,09&nbsp;USD</td><td>valeur unitaire des commandes</td></tr>
+      <tr><td>Écart de conversion mobile et desktop</td><td class="n">+1,1&nbsp;point</td><td>alerte si la parité se dégrade</td></tr>
+    </tbody>
+  </table>
+  <p class="petit">Ces valeurs de référence portent sur la période complète. Le tableau de bord permet de les recalculer sur n’importe quelle période, appareil, pays ou catégorie, et d’en suivre la variation.</p>
+</section>
+
+<!-- ================================================================ 8. TECHNIQUE ET LIMITES -->
+<section class="section suite" id="s8">
+  <div class="entete-section">
+    <div class="numero">08</div>
+    <div>
+      <div class="surtitre">Recul critique</div>
+      <h2>Conclusions techniques et limites</h2>
+    </div>
+  </div>
+
+  <h3>Conclusions techniques</h3>
+  <ul>
+    <li><strong>Une chaîne reproductible.</strong> Du téléchargement contrôlé des fichiers bruts à l’export Parquet, chaque étape est scriptée et chiffrée&#8239;; le notebook s’exécute de bout en bout et produit les figures de ce rapport.</li>
+    <li><strong>La session, bon niveau d’analyse.</strong> Passer de 719&#8239;386 événements à 18&#8239;101 sessions a rendu calculables la durée, la valeur du panier et l’entonnoir, et a révélé que <code>ga_session_id</code> seul n’est pas un identifiant de session.</li>
+    <li><strong>Des statistiques robustes à l’asymétrie.</strong> Médiane plutôt que moyenne pour la durée, échelle logarithmique, corrélation de Spearman et taux conditionnels pour l’entonnoir&nbsp;: les choix de représentation ont évité plusieurs conclusions trompeuses.</li>
+    <li><strong>Un format adapté au déploiement.</strong> Le Parquet divise par neuf environ le volume (41,7&nbsp;Mo de CSV contre 4,8&nbsp;Mo) en conservant les types&#8239;; avec la mise en cache, l’application reste fluide sur Streamlit Community Cloud.</li>
+    <li><strong>Une application testée.</strong> 95 tests pytest vérifient les données traitées, les indicateurs, les constats, les graphiques (y compris les filtres vides et le suivi du thème) et l’application elle-même.</li>
+  </ul>
+
+  <h3>Limites des données</h3>
+  <table class="coupable">
+    <thead><tr><th style="width:24%">Limite</th><th>Constat chiffré</th><th style="width:28%">Conséquence pour l’analyse</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Fuseau horaire non documenté</strong></td><td>La source ne précise pas le fuseau des horodatages, probablement celui de la propriété Google Analytics (États-Unis). Le profil horaire est anormalement plat&nbsp;: 681 à 789 sessions selon l’heure.</td><td>Analyses horaires lues comme tendances relatives&#8239;; recommandations fondées sur le jour.</td></tr>
+      <tr><td><strong>Échantillon obfusqué</strong></td><td>Google anonymise ce jeu public&nbsp;: 6&#8239;155 sessions (34,0&#8239;%) contiennent exactement 12 articles distincts et les paniers de 191 et 382&nbsp;USD sont surreprésentés (panier médian de 382&nbsp;USD sur chaque appareil).</td><td>Niveaux absolus de panier à prendre avec prudence&#8239;; comparaisons relatives conservées.</td></tr>
+      <tr><td><strong>Sessions à durée nulle</strong></td><td>5&#8239;922 sessions (32,7&#8239;%) n’ont qu’un horodatage&nbsp;: leur durée réelle est inconnue.</td><td>Durée moyenne et médiane sous-estimées&#8239;; ces sessions sont exclues des seules figures en échelle log.</td></tr>
+      <tr><td><strong>Valeur ajoutée au panier et dépense</strong></td><td>938,63&nbsp;USD ajoutés au panier par session contre 15,99&nbsp;USD de chiffre d’affaires&#8239;; un article ajouté plusieurs fois compte plusieurs fois.</td><td>Indicateur d’intérêt, jamais présenté comme une dépense.</td></tr>
+      <tr><td><strong>Collecte incomplète en début de période</strong></td><td>Avant le 16 novembre, seuls les achats sont enregistrés (600 sessions, 99,8&#8239;% avec achat, 13,3&#8239;% du chiffre d’affaires)&#8239;; <code>begin_checkout</code> n’apparaît que le 23 novembre. 953 des 1&#8239;006 achats sans début de paiement sont antérieurs à cette date.</td><td>Conversion globale légèrement surestimée&#8239;; entonnoir stable si l’on part du 23 novembre (voir ci-dessous).</td></tr>
+      <tr><td><strong>Événements e-commerce seulement</strong></td><td>Pas de pages vues ni de source de trafic&nbsp;: une session est ici une visite comportant au moins un ajout au panier, un paiement ou un achat.</td><td>Les visiteurs qui ne font que regarder sont invisibles&#8239;; pas d’analyse d’acquisition possible.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="encadre info">
+    <div class="titre-encadre">Test de robustesse de l’entonnoir</div>
+    <p>En limitant l’analyse aux 16&#8239;702 sessions démarrées à partir du 23 novembre, date où les trois types d’événements sont collectés, le taux de conversion descend à 20,9&#8239;%, mais les taux conditionnels restent du même ordre&nbsp;: 36,3&#8239;% des sessions avec panier commencent un paiement (35,0&#8239;% sur la période complète) et 47,1&#8239;% des paiements aboutissent (identique). Il ne reste alors que 53 achats sans <code>begin_checkout</code>. <strong>La conclusion principale, une perte concentrée entre panier et paiement, ne dépend donc pas de ce défaut de collecte.</strong> Calcul complémentaire réalisé pour ce rapport à partir de <code>data/processed/</code>.</p>
+  </div>
+
+  <h3>Limites de l’outil et pistes d’amélioration</h3>
+  <ul>
+    <li><strong>Hébergement gratuit.</strong> Streamlit Community Cloud met l’application en veille après une période d’inactivité&#8239;; le premier chargement peut prendre quelques secondes.</li>
+    <li><strong>Dépendance à la version de Streamlit.</strong> Le CSS personnalisé cible la structure interne de Streamlit 1.66, d’où la version figée dans <code>requirements.txt</code>.</li>
+    <li><strong>Pistes.</strong> Exploiter <code>users.csv</code> pour une analyse de cohortes et de valeur vie client&#8239;; ajouter un raccourci «&nbsp;à partir du 23 novembre&nbsp;» pour neutraliser le défaut de collecte&#8239;; confirmer le fuseau horaire auprès de la source&#8239;; enrichir les données avec les pages vues et les sources de trafic pour relier l’audience à l’acquisition.</li>
+  </ul>
+</section>
+
+<!-- ================================================================ ANNEXES -->
+<section class="section" id="sa">
+  <div class="entete-section">
+    <div class="numero">A</div>
+    <div>
+      <div class="surtitre">Pour reproduire et vérifier</div>
+      <h2>Annexes</h2>
+    </div>
+  </div>
+
+  <h3 id="sa-1"><span class="num">A.1</span>Exécution locale</h3>
+  <p>Prérequis&nbsp;: Python 3.12 et Git. Les données brutes et traitées sont versionnées&nbsp;: l’application démarre sans étape préalable.</p>
+<pre><span class="com"># 1. Récupérer le projet et créer l'environnement</span>
+<span class="cmd">git clone</span> https://github.com/Abdazz/audience-lab.git
+<span class="cmd">cd</span> audience-lab
+<span class="cmd">python3 -m venv</span> .venv
+<span class="cmd">source</span> .venv/bin/activate
+<span class="cmd">pip install</span> -r requirements-dev.txt   <span class="com"># requirements.txt suffit pour l'application seule</span>
+
+<span class="com"># 2. Lancer le tableau de bord (http://localhost:8501)</span>
+<span class="cmd">streamlit run</span> app.py
+
+<span class="com"># 3. Facultatif : retélécharger les données brutes et réexécuter le notebook</span>
+<span class="cmd">python</span> scripts/telecharger_donnees.py
+<span class="cmd">jupyter nbconvert</span> --to notebook --execute --inplace notebooks/01_preparation_donnees.ipynb
+
+<span class="com"># 4. Lancer les tests, puis régénérer ce rapport (Chromium et pdftotext requis)</span>
+<span class="cmd">pytest</span> -q
+<span class="cmd">scripts/generer_pdf.sh</span> rapport/rapport_analyse.html rapport/rapport_analyse.pdf</pre>
+
+  <h3 id="sa-2"><span class="num">A.2</span>Arborescence du dépôt</h3>
+<pre>audience-lab/
+├── app.py                         <span class="com"># point d'entrée Streamlit</span>
+├── audience/                      <span class="com"># logique de l'application</span>
+│   ├── donnees.py                 <span class="com"># chargement, filtres, périodes de comparaison</span>
+│   ├── kpis.py                    <span class="com"># indicateurs, variations, typographie</span>
+│   ├── constats.py                <span class="com"># constats rédigés automatiquement</span>
+│   ├── graphiques.py              <span class="com"># figures Plotly Express</span>
+│   └── theme.py                   <span class="com"># thèmes sombre et clair, CSS</span>
+├── data/
+│   ├── raw/                       <span class="com"># events.csv, items.csv, users.csv (source)</span>
+│   └── processed/                 <span class="com"># events_clean.parquet, sessions.parquet</span>
+├── notebooks/01_preparation_donnees.ipynb
+├── rapport/                       <span class="com"># ce rapport (HTML, CSS, PDF) et figures/</span>
+├── scripts/                       <span class="com"># téléchargement des données, génération du PDF</span>
+├── tests/                         <span class="com"># 95 tests pytest</span>
+├── docs/captures/                 <span class="com"># captures d'écran de l'application</span>
+├── .streamlit/config.toml
+├── requirements.txt               <span class="com"># versions exactes</span>
+└── requirements-dev.txt           <span class="com"># + Jupyter, pytest</span></pre>
+
+  <h3 id="sa-3"><span class="num">A.3</span>Correspondance avec les exigences du sujet</h3>
+  <table>
+    <thead><tr><th style="width:36%">Exigence</th><th>Où la trouver</th></tr></thead>
+    <tbody>
+      <tr><td>1.1 Variables temporelle, numériques, catégorielles</td><td>Rapport 2.3&#8239;; notebook, sections 1 et 6</td></tr>
+      <tr><td>2.1.1 Inspection, valeurs manquantes et aberrantes</td><td>Rapport 3&#8239;; notebook, sections 1, 2, 3 et 8</td></tr>
+      <tr><td>2.1.2 Conversion en <code>datetime</code>, indexation temporelle</td><td>Notebook, section 4 (<code>pd.to_datetime</code>, <code>set_index</code>, <code>resample</code>)</td></tr>
+      <tr><td>2.1.3 Variables agrégées (heure, jour, mois)</td><td>Notebook, sections 6 et 7</td></tr>
+      <tr><td>2.2 KPI&nbsp;: volume, durée ou valeur moyenne, répartition</td><td>Rapport 4&#8239;; notebook, section 9&#8239;; bandeau <code>st.metric</code></td></tr>
+      <tr><td>2.3.1 Évolution temporelle avec filtres</td><td>Rapport 5.1&#8239;; onglet Temporalité (<code>px.line</code>)</td></tr>
+      <tr><td>2.3.2 Comparaison catégorielle (barres ou camembert)</td><td>Rapport 5.2&#8239;; onglet Audience (<code>px.bar</code>, <code>px.pie</code>)</td></tr>
+      <tr><td>2.3.3 Distribution par appareil (boxplot ou densité)</td><td>Rapport 5.3&#8239;; onglet Engagement (<code>px.box</code>, <code>px.histogram</code>)</td></tr>
+      <tr><td>2.3.4 Heatmap heures x jours</td><td>Rapport 5.4&#8239;; onglet Temporalité (<code>px.imshow</code>)</td></tr>
+      <tr><td>2.4 <code>st.sidebar</code>, <code>st.metric</code>, <code>st.plotly_chart</code>, <code>st.download_button</code></td><td>Rapport 6&#8239;; <code>app.py</code>, sections 4 à 6</td></tr>
+      <tr><td>3.1 Code source propre et commenté, notebook</td><td><code>app.py</code>, <code>audience/</code>, <code>notebooks/</code>&#8239;; dépôt GitHub</td></tr>
+      <tr><td>3.2 Rapport d’analyse</td><td>Présent document (<code>rapport/rapport_analyse.pdf</code>)</td></tr>
+      <tr><td>3.3 Démonstration orale</td><td>Application en ligne&#8239;; support dans <code>soutenance/</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="sa-4"><span class="num">A.4</span>Sources et références</h3>
+  <ul class="petit">
+    <li>Google, <em>Google Analytics 4 ecommerce sample dataset</em>, jeu public BigQuery <code>bigquery-public-data.ga4_obfuscated_sample_ecommerce</code>.</li>
+    <li>Observable, <em>Google Merchandise Sales Data</em>, <code>@observablehq/google-merchandise-sales-data</code>&#8239;; reprise Kaggle <code>mexwell/google-merchandise-sales-data</code>.</li>
+    <li>Documentation de pandas, seaborn, Plotly Express et Streamlit (versions figées dans <code>requirements.txt</code>).</li>
+    <li>J. W. Tukey, <em>Exploratory Data Analysis</em>, Addison-Wesley, 1977 (règle des 1,5&nbsp;x IQR).</li>
+    <li>Code et données du projet&nbsp;: <a href="https://github.com/Abdazz/audience-lab">https://github.com/Abdazz/audience-lab</a>&#8239;; application&nbsp;: <a href="https://audience-lab.streamlit.app">https://audience-lab.streamlit.app</a>.</li>
+  </ul>
+</section>
+
+</body>
+</html>
