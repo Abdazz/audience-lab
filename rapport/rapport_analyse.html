@@ -674,6 +674,7 @@
   <h3 id="sa-2"><span class="num">A.2</span>Arborescence du dépôt</h3>
 <pre>audience-lab/
 ├── app.py                         <span class="com"># point d'entrée Streamlit</span>
+├── lancer.sh, lancer.bat           <span class="com"># lancement en une commande (Linux, Windows)</span>
 ├── audience/                      <span class="com"># données, KPI, constats, graphiques, thèmes</span>
 │   └── donnees.py, kpis.py, constats.py, graphiques.py, theme.py
 ├── data/
@@ -681,8 +682,6 @@
 │   └── processed/                 <span class="com"># events_clean.parquet, sessions.parquet</span>
 ├── notebooks/01_preparation_donnees.ipynb
 ├── rapport/                       <span class="com"># ce rapport (HTML, CSS, PDF) et figures/</span>
-├── soutenance/                    <span class="com"># support de l'oral et déroulé de la démonstration</span>
-│   └── presentation.html, presentation.pdf, deroule_demo.md
 ├── scripts/                       <span class="com"># téléchargement des données, génération du PDF</span>
 ├── tests/                         <span class="com"># 99 tests pytest</span>
 ├── docs/captures/                 <span class="com"># captures d'écran de l'application</span>
@@ -707,7 +706,7 @@
       <tr><td>2.4 <code>st.sidebar</code>, <code>st.metric</code>, <code>st.plotly_chart</code>, <code>st.download_button</code></td><td>Rapport 6&#8239;; <code>app.py</code>, sections&nbsp;4 à 6</td></tr>
       <tr><td>3.1 Code source propre et commenté, notebook</td><td><code>app.py</code>, <code>audience/</code>, <code>notebooks/</code>&#8239;; dépôt GitHub</td></tr>
       <tr><td>3.2 Rapport d’analyse</td><td>Présent document (<code>rapport/rapport_analyse.pdf</code>)</td></tr>
-      <tr><td>3.3 Démonstration orale</td><td>Application en ligne&#8239;; support dans <code>soutenance/</code></td></tr>
+      <tr><td>3.3 Démonstration orale</td><td>Application en ligne, présentée en direct lors de la soutenance</td></tr>
     </tbody>
   </table>
 

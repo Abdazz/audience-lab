@@ -14,7 +14,7 @@
 
 ### [Ouvrir l'application en ligne : audience-lab.streamlit.app](https://audience-lab.streamlit.app)
 
-[Rapport d'analyse (PDF)](rapport/rapport_analyse.pdf) · [Support de soutenance (PDF)](soutenance/presentation.pdf) · [Déroulé de la démonstration](soutenance/deroule_demo.md) · [Notebook de préparation](notebooks/01_preparation_donnees.ipynb)
+[Rapport d'analyse (PDF)](rapport/rapport_analyse.pdf) · [Notebook de préparation](notebooks/01_preparation_donnees.ipynb)
 
 </div>
 
@@ -152,7 +152,7 @@ Chaque exigence du sujet (`projet.pdf`) et l'endroit précis où la vérifier.
 | **2.4** Export CSV des données filtrées `st.download_button` | `app.py`, section 4 (`bouton_export`) : barre latérale et onglet **Données** |
 | **Livrable 1** Code source propre et commenté, notebook `.ipynb` | [`app.py`](app.py), package [`audience/`](audience/), [`notebooks/01_preparation_donnees.ipynb`](notebooks/01_preparation_donnees.ipynb) (exécuté, sorties conservées), [`tests/`](tests/) (99 tests) |
 | **Livrable 2** Rapport d'analyse (données, nettoyage, interprétation, conclusions) | [`rapport/rapport_analyse.pdf`](rapport/rapport_analyse.pdf) (19 pages ; source HTML et CSS dans `rapport/`) |
-| **Livrable 3** Démonstration orale du tableau de bord | [Application en ligne](https://audience-lab.streamlit.app), [`soutenance/presentation.pdf`](soutenance/presentation.pdf), [`soutenance/deroule_demo.md`](soutenance/deroule_demo.md) |
+| **Livrable 3** Démonstration orale du tableau de bord | [Application en ligne](https://audience-lab.streamlit.app), présentée en direct lors de la soutenance |
 
 ## Arborescence du dépôt
 
@@ -173,7 +173,6 @@ audience-lab/
 ├── notebooks/
 │   └── 01_preparation_donnees.ipynb
 ├── rapport/                       # rapport_analyse.pdf, sa source HTML et CSS, figures/
-├── soutenance/                    # presentation.html, presentation.pdf, deroule_demo.md
 ├── scripts/
 │   ├── telecharger_donnees.py     # téléchargement contrôlé des données brutes
 │   ├── generer_pdf.sh             # impression HTML vers PDF (Chromium sans interface)
@@ -229,9 +228,8 @@ python scripts/telecharger_donnees.py
 # Réexécuter le notebook de bout en bout : il réécrit data/processed/ et rapport/figures/
 jupyter nbconvert --to notebook --execute --inplace notebooks/01_preparation_donnees.ipynb
 
-# Regénérer les PDF (Chromium et pdftotext requis)
+# Regénérer le PDF du rapport (Chromium et pdftotext requis)
 scripts/generer_pdf.sh rapport/rapport_analyse.html rapport/rapport_analyse.pdf
-scripts/generer_pdf.sh soutenance/presentation.html soutenance/presentation.pdf
 ```
 
 ## Livrables
@@ -241,8 +239,6 @@ scripts/generer_pdf.sh soutenance/presentation.html soutenance/presentation.pdf
 | Application Streamlit | [`app.py`](app.py), en ligne : https://audience-lab.streamlit.app |
 | Notebook de pré-traitement | [`notebooks/01_preparation_donnees.ipynb`](notebooks/01_preparation_donnees.ipynb) |
 | Rapport d'analyse | [`rapport/rapport_analyse.pdf`](rapport/rapport_analyse.pdf) |
-| Support de soutenance | [`soutenance/presentation.pdf`](soutenance/presentation.pdf) (source : [`presentation.html`](soutenance/presentation.html)) |
-| Déroulé de la démonstration | [`soutenance/deroule_demo.md`](soutenance/deroule_demo.md) |
 
 ## Source, licence et crédits
 
