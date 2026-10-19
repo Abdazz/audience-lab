@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audience Lab&nbsp;: soutenance</title>
+<meta name="author" content="Abdoul-Aziz ZOROM">
+<meta name="description" content="Support de soutenance du projet Audience Lab : audience de la Google Merchandise Store (GA4), novembre 2020 à janvier 2021.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=block">
+<style>
+/* Support de soutenance : une section.slide par page, 1280 x 720 px (16:9).
+   Couleurs du thème sombre « Nuit analytique » de l'application. */
+:root {
+  --fond: #0B1020;
+  --surface: #141B35;
+  --surface-2: #1A2245;
+  --bordure: #232D55;
+  --texte: #E6E9F5;
+  --texte-2: #94A3B8;
+  --violet: #8B5CF6;
+  --cyan: #22D3EE;
+  --rose: #F472B6;
+  --positif: #34D399;
+  --negatif: #F87171;
+  --ambre: #FBBF24;
+  --degrade: linear-gradient(100deg, #8B5CF6 0%, #22D3EE 100%);
+}
+@page { size: 1280px 720px; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  background: #05070F;
+  color: var(--texte);
+  font-family: "Inter", "Noto Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+}
+.slide {
+  position: relative;
+  width: 1280px;
+  height: 720px;
+  margin: 24px auto;
+  padding: 56px 72px 0;
+  overflow: hidden;
+  background:
+    radial-gradient(900px 520px at -8% -12%, rgba(139, 92, 246, 0.20), transparent 60%),
+    radial-gradient(760px 520px at 110% 115%, rgba(34, 211, 238, 0.14), transparent 60%),
+    var(--fond);
+  break-after: page;
+  page-break-after: always;
+}
+.slide:last-child { break-after: auto; page-break-after: auto; }
+@media print {
+  body { background: var(--fond); }
+  .slide { margin: 0; }
+}
+
+/* Grille de points discrète en fond */
+.slide::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(148, 163, 184, 0.10) 1px, transparent 1px);
+  background-size: 28px 28px;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0.9), transparent 70%);
+  mask-image: linear-gradient(180deg, rgba(0,0,0,0.9), transparent 70%);
+  pointer-events: none;
+}
+.slide > * { position: relative; }
+
+/* En-tête et pied communs */
+.surtitre {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-size: 14px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--cyan);
+}
+.surtitre .num {
+  display: inline-grid; place-items: center;
+  width: 30px; height: 30px; border-radius: 9px;
+  background: var(--degrade); color: #FFFFFF; letter-spacing: 0; font-size: 14px;
+}
+h2 {
+  margin-top: 14px;
+  font-size: 44px; line-height: 1.12; font-weight: 800; letter-spacing: -0.02em;
+}
+.chapeau { margin-top: 12px; font-size: 21px; line-height: 1.45; color: var(--texte-2); max-width: 1020px; }
+.chapeau b { color: var(--texte); font-weight: 600; }
+.pied {
+  position: absolute; left: 72px; right: 72px; bottom: 26px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 13px; color: #64748B; letter-spacing: 0.02em;
+}
+.pied .marque { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; color: var(--texte-2); }
+.pied .pastille { width: 8px; height: 8px; border-radius: 50%; background: var(--degrade); }
+.pied .page { font-variant-numeric: tabular-nums; font-weight: 600; }
+.pied .page b { color: var(--texte); }
+
+/* Accents en couleur pleine : le texte en dégradé (background-clip: text) s'affiche
+   en rectangle plein dans certains lecteurs PDF ; le dégradé reste sur les formes. */
+.degrade { color: #A78BFA; }
+.degrade.cyan, .cyan-texte { color: var(--cyan); }
+h1 .degrade, h2 .degrade {
+  color: #C4B5FD;
+  background: var(--degrade) no-repeat 0 100% / 100% 5px;
+  padding-bottom: 3px;
+}
+.carte {
+  background: linear-gradient(180deg, rgba(26, 34, 69, 0.85), rgba(20, 27, 53, 0.92));
+  border: 1px solid var(--bordure);
+  border-radius: 20px;
+}
+.puce {
+  flex: none; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 14px; border-radius: 999px;
+  background: rgba(139, 92, 246, 0.12); border: 1px solid rgba(139, 92, 246, 0.35);
+  font-size: 15px; font-weight: 600; color: #C4B5FD;
+}
+.puce.cyan { background: rgba(34, 211, 238, 0.10); border-color: rgba(34, 211, 238, 0.35); color: #A5F3FC; }
+code, .code {
+  font-family: "JetBrains Mono", "DejaVu Sans Mono", ui-monospace, monospace;
+  font-size: 0.86em; color: #C4B5FD;
+  background: rgba(139, 92, 246, 0.12); border-radius: 6px; padding: 1px 6px;
+}
+.nombre { font-variant-numeric: tabular-nums; font-weight: 800; letter-spacing: -0.03em; }
+.legende { font-size: 16px; line-height: 1.4; color: var(--texte-2); }
+
+/* 1. Titre */
+.titre { padding-top: 0; }
+.titre .gauche { position: absolute; left: 72px; top: 58px; width: 600px; }
+.logo {
+  width: 64px; height: 64px; border-radius: 18px; background: var(--degrade);
+  display: grid; place-items: center; box-shadow: 0 16px 40px rgba(139, 92, 246, 0.35);
+}
+.titre h1 {
+  margin-top: 30px; color: #FFFFFF;
+  font-size: 100px; line-height: 1; font-weight: 900; letter-spacing: -0.045em;
+}
+.titre h1 .lab { color: #A78BFA; }
+.titre .trait { margin-top: 22px; width: 132px; height: 6px; border-radius: 3px; background: var(--degrade); }
+.titre .accroche { margin-top: 26px; font-size: 25px; line-height: 1.4; color: var(--texte); font-weight: 500; }
+.titre .accroche span { color: var(--texte-2); font-weight: 400; }
+.titre .meta { margin-top: 30px; display: grid; gap: 6px; font-size: 17px; color: var(--texte-2); }
+.titre .meta strong { color: var(--texte); font-size: 21px; font-weight: 700; }
+.titre .ecran {
+  position: absolute; left: 700px; top: 104px; width: 760px;
+  border-radius: 16px; overflow: hidden;
+  border: 1px solid #2E3A6E;
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.55), 0 0 0 8px rgba(139, 92, 246, 0.08);
+}
+.titre .ecran img { display: block; width: 100%; }
+.titre .bandeau-bas {
+  position: absolute; left: 72px; right: 72px; bottom: 64px;
+  display: flex; gap: 12px;
+}
+
+/* 2. Problématique */
+.questions { margin-top: 38px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.question { padding: 26px 24px 24px; display: flex; flex-direction: column; min-height: 330px; }
+.question .chiffre { font-size: 52px; line-height: 1; font-weight: 900; }
+.question h3 { margin-top: 18px; font-size: 26px; line-height: 1.2; font-weight: 700; }
+.question p { margin-top: 12px; font-size: 17px; line-height: 1.45; color: var(--texte-2); flex: 1; }
+.question .onglet { margin-top: 16px; align-self: flex-start; }
+.analogie { margin-top: 26px; display: flex; gap: 14px; flex-wrap: wrap; font-size: 17px; color: var(--texte-2); align-items: center; }
+.analogie b { color: var(--texte); font-weight: 600; }
+
+/* 3. Données */
+.donnees { margin-top: 34px; display: grid; grid-template-columns: 500px 1fr; gap: 28px; }
+.source { padding: 28px 30px; }
+.source h3 { font-size: 22px; font-weight: 700; }
+.source p { margin-top: 10px; font-size: 17px; line-height: 1.5; color: var(--texte-2); }
+.fichiers { margin-top: 18px; display: grid; gap: 10px; }
+.fichier { display: flex; justify-content: space-between; align-items: baseline; padding: 11px 16px; border-radius: 12px; background: rgba(11, 16, 32, 0.6); border: 1px solid var(--bordure); font-size: 17px; }
+.fichier .n { font-variant-numeric: tabular-nums; font-weight: 700; }
+.fichier small { color: var(--texte-2); font-size: 14px; margin-left: 8px; }
+.grands { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.grand { padding: 24px 26px; }
+.grand .nombre { font-size: 58px; line-height: 1.05; }
+.grand:nth-child(2) .nombre, .grand:nth-child(3) .nombre { color: var(--cyan); }
+.grand .legende { margin-top: 6px; font-size: 17px; }
+.criteres { margin-top: 22px; display: flex; gap: 12px; flex-wrap: wrap; }
+.critere { display: inline-flex; align-items: center; gap: 10px; padding: 9px 16px; border-radius: 12px; background: rgba(52, 211, 153, 0.08); border: 1px solid rgba(52, 211, 153, 0.30); font-size: 16px; color: var(--texte); }
+.critere svg { flex: none; }
+
+/* 4. Nettoyage */
+.flux { margin-top: 40px; display: grid; grid-template-columns: 1fr 44px 1fr 44px 1fr 44px 1fr; align-items: center; }
+.etape { padding: 22px 22px 20px; min-height: 170px; }
+.etape .nombre { font-size: 44px; line-height: 1; }
+.etape .quoi { margin-top: 10px; font-size: 18px; font-weight: 600; }
+.etape .detail { margin-top: 6px; font-size: 15px; color: var(--texte-2); line-height: 1.4; }
+.fleche { display: grid; place-items: center; color: #4B5A99; }
+.etape.moins .nombre { color: var(--negatif); }
+.decisions { margin-top: 26px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.decision { padding: 22px 24px; border-left: 4px solid var(--violet); }
+.decision:nth-child(2) { border-left-color: var(--cyan); }
+.decision:nth-child(3) { border-left-color: var(--rose); }
+.decision h3 { font-size: 20px; font-weight: 700; }
+.decision p { margin-top: 8px; font-size: 16.5px; line-height: 1.45; color: var(--texte-2); }
+.decision p b { color: var(--texte); font-weight: 600; }
+
+.controles { margin-top: 26px; display: flex; justify-content: space-between; gap: 16px; padding: 16px 24px; border-radius: 16px; border: 1px dashed #2E3A6E; font-size: 16px; color: var(--texte-2); }
+.controles b { color: var(--texte); font-weight: 600; }
+
+/* 5. KPI */
+.kpis { margin-top: 34px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.kpi { position: relative; padding: 24px 26px 22px; overflow: hidden; }
+.kpi::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--degrade); }
+.kpi .libelle { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 600; color: var(--texte-2); text-transform: uppercase; letter-spacing: 0.08em; }
+.kpi .nombre { margin-top: 12px; font-size: 62px; line-height: 1; }
+.kpi .legende { margin-top: 10px; }
+.ca { margin-top: 22px; display: flex; align-items: center; gap: 18px; font-size: 19px; color: var(--texte-2); }
+.ca .nombre { font-size: 30px; color: var(--texte); }
+
+/* 6. Constat 1 */
+.constat-haut { display: flex; justify-content: space-between; align-items: flex-end; }
+.capture { margin-top: 22px; border-radius: 16px; overflow: hidden; border: 1px solid #2E3A6E; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45); }
+.capture img { display: block; }
+.recadre { position: relative; overflow: hidden; }
+.recadre img { position: absolute; }
+.trio { margin-top: 16px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.mini { padding: 14px 20px; display: flex; align-items: center; gap: 18px; }
+.mini .nombre { font-size: 36px; line-height: 1; white-space: nowrap; }
+.trio .mini:nth-child(2) .nombre { color: var(--cyan); }
+.mini .legende { font-size: 15.5px; }
+
+/* 7. Constats 2 et 3 */
+.duo { margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.duo .carte { padding: 28px 30px; }
+.duo .tete { display: flex; align-items: center; gap: 12px; }
+.duo h3 { font-size: 25px; font-weight: 700; line-height: 1.2; }
+.paire { margin-top: 22px; display: flex; align-items: center; gap: 18px; }
+.paire .nombre { font-size: 56px; line-height: 1; }
+.paire .legende { font-size: 16px; }
+.paire .vers { color: #4B5A99; }
+.barres { margin-top: 24px; display: grid; gap: 14px; }
+.barre { display: grid; grid-template-columns: 82px 1fr 64px; align-items: center; gap: 14px; font-size: 17px; }
+.barre .piste { height: 14px; border-radius: 7px; background: rgba(148, 163, 184, 0.12); overflow: hidden; }
+.barre .rempli { height: 100%; border-radius: 7px; }
+.barre .val { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+.entonnoir { margin-top: 22px; display: grid; gap: 10px; }
+.marche { position: relative; height: 54px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; padding: 0 18px; font-size: 17px; font-weight: 600; color: #FFFFFF; margin: 0 auto; }
+.marche code { background: rgba(255, 255, 255, 0.16); color: #FFFFFF; }
+.passage { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 16px; color: var(--texte-2); }
+.passage b { font-size: 20px; color: var(--texte); font-variant-numeric: tabular-nums; }
+.alerte { margin-top: 18px; padding: 12px 16px; border-radius: 12px; background: rgba(248, 113, 113, 0.10); border: 1px solid rgba(248, 113, 113, 0.35); font-size: 16px; color: #FECACA; }
+.alerte b { color: #FFFFFF; }
+.note-bas { margin-top: 16px; font-size: 15px; color: var(--texte-2); }
+
+/* 8. Démonstration */
+.demo { margin-top: 30px; display: grid; grid-template-columns: 470px 1fr; gap: 32px; }
+.lien {
+  display: block; padding: 20px 24px; border-radius: 18px; text-decoration: none;
+  background: linear-gradient(120deg, rgba(139, 92, 246, 0.22), rgba(34, 211, 238, 0.14));
+  border: 1px solid rgba(139, 92, 246, 0.5);
+}
+.lien small { display: block; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cyan); }
+.lien span { display: block; margin-top: 6px; font-size: 27px; font-weight: 800; color: #FFFFFF; letter-spacing: -0.01em; }
+.parcours { margin-top: 18px; display: grid; gap: 8px; counter-reset: etape; }
+.parcours li { list-style: none; display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; font-size: 16.5px; line-height: 1.38; color: var(--texte-2); }
+.parcours li::before {
+  counter-increment: etape; content: counter(etape);
+  display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px;
+  background: var(--surface-2); border: 1px solid var(--bordure); color: var(--texte); font-weight: 700; font-size: 14px;
+}
+.parcours b { color: var(--texte); font-weight: 600; }
+.navigateur { border-radius: 14px; overflow: hidden; border: 1px solid #2E3A6E; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5); background: #FFFFFF; }
+.navigateur .barre-nav { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; background: #1A2245; border-bottom: 1px solid var(--bordure); }
+.navigateur .barre-nav i { width: 11px; height: 11px; border-radius: 50%; display: block; }
+.navigateur .url { margin-left: 14px; flex: 1; height: 22px; border-radius: 6px; background: #0F1530; color: var(--texte-2); font-size: 12.5px; display: flex; align-items: center; padding-left: 10px; }
+.navigateur img { display: block; width: 100%; }
+.secours { margin-top: 14px; font-size: 15px; color: var(--texte-2); }
+
+/* 9. Conclusion */
+.recos { margin-top: 30px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.reco { padding: 24px 24px 22px; }
+.reco .rang { font-size: 15px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
+.reco h3 { margin-top: 10px; font-size: 22px; line-height: 1.25; font-weight: 700; }
+.reco p { margin-top: 10px; font-size: 16px; line-height: 1.45; color: var(--texte-2); }
+.reco .appui { margin-top: 14px; font-size: 26px; }
+.bas { margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.bas .carte { padding: 18px 24px; }
+.bas h4 { font-size: 14px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.bas ul { margin-top: 8px; display: grid; gap: 4px; padding-left: 18px; }
+.bas li { font-size: 15.5px; line-height: 1.42; color: var(--texte-2); }
+.bas li::marker { color: #4B5A99; }
+
+/* 10. Merci */
+.merci { display: flex; flex-direction: column; justify-content: center; padding-bottom: 60px; }
+.merci h2 { color: #FFFFFF; margin-top: 18px; font-size: 120px; line-height: 1; font-weight: 900; letter-spacing: -0.045em; }
+.merci .sous { margin-top: 18px; font-size: 30px; font-weight: 600; color: var(--texte-2); }
+.liens { margin-top: 46px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.liens .carte { padding: 20px 24px; }
+.liens small { display: block; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cyan); }
+.liens span { display: block; margin-top: 8px; font-size: 19px; font-weight: 700; color: var(--texte); word-break: break-word; }
+.signature { margin-top: 36px; font-size: 17px; color: var(--texte-2); }
+.signature b { color: var(--texte); }
+</style>
+</head>
+<body>
+
+<!-- ======================================================= 1. TITRE -->
+<section class="slide titre">
+  <div class="gauche">
+    <div class="logo">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 4 8-9"/><path d="M15 7h5v5"/></svg>
+    </div>
+    <h1>Audience <span class="lab">Lab</span></h1>
+    <div class="trait"></div>
+    <p class="accroche">Qui visite la Google Merchandise Store, quand, sur quel appareil, et où perd-elle ses acheteurs&#8239;? <span>Tableau de bord Streamlit sur 18&#8239;101 sessions GA4.</span></p>
+    <div class="meta">
+      <strong>Abdoul-Aziz ZOROM</strong>
+      <span>Master 1 Intelligence Artificielle · Université Aube-Nouvelle</span>
+      <span>Visualisation de Données avec Python · Dr. Zakaria Sawadogo</span>
+      <span>19 octobre 2026</span>
+    </div>
+  </div>
+  <div class="ecran"><img src="../docs/captures/accueil_sombre.png" alt="Audience Lab, page d'accueil"></div>
+  <div class="pied"><span class="marque"><i class="pastille"></i>Soutenance · Projet pratique de visualisation d'audience</span><span class="page"><b>01</b> / 10</span></div>
+</section>
+
+<!-- ======================================================= 2. PROBLÉMATIQUE -->
+<section class="slide">
+  <div class="surtitre"><span class="num">02</span>Problématique</div>
+  <h2>Lire une boutique en ligne <span class="degrade">comme un média</span></h2>
+  <p class="chapeau">Le sujet porte sur l'audience d'une plateforme en ligne. J'ai choisi un vrai site e-commerce mesuré par Google Analytics 4, et quatre questions qui structurent toute l'analyse.</p>
+  <div class="questions">
+    <div class="carte question">
+      <div class="chiffre degrade">1</div>
+      <h3>Quand les visiteurs viennent-ils&#8239;?</h3>
+      <p>Saisonnalité de fin d'année, jours et heures de pointe.</p>
+      <span class="puce onglet">Onglet Temporalité</span>
+    </div>
+    <div class="carte question">
+      <div class="chiffre degrade">2</div>
+      <h3>D'où et sur quel appareil&#8239;?</h3>
+      <p>Parts par appareil, par pays et par catégorie de produit.</p>
+      <span class="puce onglet">Onglet Audience</span>
+    </div>
+    <div class="carte question">
+      <div class="chiffre degrade">3</div>
+      <h3>À quel point s'engagent-ils&#8239;?</h3>
+      <p>Durée de session, nombre d'actions, valeur ajoutée au panier.</p>
+      <span class="puce onglet">Onglet Engagement</span>
+    </div>
+    <div class="carte question">
+      <div class="chiffre degrade">4</div>
+      <h3>Où les perd-on&#8239;?</h3>
+      <p>Entonnoir <code>add_to_cart</code>, <code>begin_checkout</code>, <code>purchase</code>.</p>
+      <span class="puce onglet">Onglet Conversion</span>
+    </div>
+  </div>
+  <div class="analogie"><span class="puce cyan">Analogie</span><span><b>session</b> = visite</span><span>·</span><span><b>appareil</b> = support de lecture</span><span>·</span><span><b>entonnoir d'achat</b> = fidélité du lectorat</span></div>
+  <div class="pied"><span class="marque"><i class="pastille"></i>Audience Lab · Soutenance</span><span class="page"><b>02</b> / 10</span></div>
+</section>
+
+<!-- ======================================================= 3. DONNÉES -->
+<section class="slide">
+  <div class="surtitre"><span class="num">03</span>Données</div>
+  <h2>Trois mois de la <span class="degrade">Google Merchandise Store</span></h2>
+  <div class="donnees">
+    <div class="carte source">
+      <h3>Google Analytics 4, données réelles</h3>
+      <p>Jeu public <code>ga4_obfuscated_sample_ecommerce</code> publié par Google, diffusé sur Observable et Kaggle. Du <b style="color:#E6E9F5">1er novembre 2020 au 31 janvier 2021</b>&nbsp;: Black Friday, Noël, creux de janvier.</p>
+      <div class="fichiers">
+        <div class="fichier"><span>events.csv <small>un événement e-commerce par ligne</small></span><span class="n">758&#8239;884</span></div>
+        <div class="fichier"><span>items.csv <small>catalogue, 21 catégories</small></span><span class="n">1&#8239;381</span></div>
+        <div class="fichier"><span>users.csv <small>valeur vie client</small></span><span class="n">270&#8239;154</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="grands">
+        <div class="carte grand"><div class="nombre degrade">758&#8239;884</div><div class="legende">événements bruts</div></div>
+        <div class="carte grand"><div class="nombre degrade">18&#8239;101</div><div class="legende">sessions reconstituées</div></div>
+        <div class="carte grand"><div class="nombre degrade">14&#8239;701</div><div class="legende">utilisateurs distincts</div></div>
+        <div class="carte grand"><div class="nombre degrade">108</div><div class="legende">pays, plus «&nbsp;(not set)&nbsp;»</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="criteres">
+    <span class="critere"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Temporelle&nbsp;: horodatage à la seconde</span>
+    <span class="critere"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Numériques&nbsp;: prix, durée, valeur du panier</span>
+    <span class="critere"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>Catégorielles&nbsp;: appareil, pays, catégorie</span>
+  </div>
+  <div class="pied"><span class="marque"><i class="pastille"></i>Audience Lab · Soutenance</span><span class="page"><b>03</b> / 10</span></div>
+</section>
+
+<!-- ======================================================= 4. NETTOYAGE -->
+<section class="slide">
+  <div class="surtitre"><span class="num">04</span>Démarche de nettoyage</div>
+  <h2>Ne rien supprimer <span class="degrade">sans preuve</span>, tout chiffrer</h2>
+  <div class="flux">
+    <div class="carte etape"><div class="nombre">758&#8239;884</div><div class="quoi">événements bruts</div><div class="detail">lecture, <code>info()</code>, <code>describe()</code>, cardinalités</div></div>
+    <div class="fleche"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    <div class="carte etape moins"><div class="nombre">−39&#8239;498</div><div class="quoi">doublons exacts</div><div class="detail">5,2&#8239;% des lignes, surtout des <code>begin_checkout</code> renvoyés</div></div>
+    <div class="fleche"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    <div class="carte etape"><div class="nombre degrade">719&#8239;386</div><div class="quoi">événements propres</div><div class="detail">dates en <code>datetime</code>, jointure du catalogue</div></div>
+    <div class="fleche"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    <div class="carte etape"><div class="nombre degrade">18&#8239;101</div><div class="quoi">sessions</div><div class="detail">22 variables, export Parquet de 4,8&nbsp;Mo</div></div>
+  </div>
+  <div class="decisions">
+    <div class="carte decision">
+      <h3>Valeurs manquantes</h3>
+      <p><b>4&#8239;555 pays manquants</b> gardés sous «&nbsp;(not set)&nbsp;», la convention de Google Analytics&nbsp;: ni supprimés, ni inventés.</p>
+    </div>
+    <div class="carte decision">
+      <h3>Temps et variables dérivées</h3>
+      <p><code>pd.to_datetime</code>, <code>set_index</code>, <code>resample</code>&#8239;; puis <b>heure, jour de la semaine, mois</b> et la clé de session.</p>
+    </div>
+    <div class="carte decision">
+      <h3>Valeurs aberrantes (IQR)</h3>
+      <p><b>3&#8239;000 sessions signalées, toutes conservées</b>&nbsp;: elles portent 42,4&#8239;% du chiffre d'affaires.</p>
+    </div>
+  </div>
+  <div class="controles">
+    <span><b>Clé de session</b>&nbsp;: <code>user_id</code> + <code>ga_session_id</code></span>
+    <span><b>Parquet</b>&nbsp;: 41,7&nbsp;Mo de CSV → 4,8&nbsp;Mo</span>
+    <span><b>Contrôles</b>&nbsp;: cohérence sessions et événements, 95 tests</span>
+  </div>
+  <div class="pied"><span class="marque"><i class="pastille"></i>Audience Lab · Soutenance · notebook 01_preparation_donnees.ipynb</span><span class="page"><b>04</b> / 10</span></div>
+</section>
+
+<!-- ======================================================= 5. KPI -->
+<section class="slide">
+  <div class="surtitre"><span class="num">05</span>Indicateurs clés</div>
+  <h2>Six cartes <code style="font-size:0.62em; vertical-align: 0.18em;">st.metric</code>, toujours visibles</h2>
+  <div class="kpis">
+    <div class="carte kpi"><div class="libelle">Sessions</div><div class="nombre">18&#8239;101</div><div class="legende">volume total de visites&#8239;; 719&#8239;386 événements</div></div>
+    <div class="carte kpi"><div class="libelle">Utilisateurs</div><div class="nombre">14&#8239;701</div><div class="legende">visiteurs distincts sur trois mois</div></div>
+    <div class="carte kpi"><div class="libelle">Durée moyenne</div><div class="nombre">5&nbsp;min 41&nbsp;s</div><div class="legende">médiane de 66&nbsp;s&nbsp;: une longue traîne</div></div>
+    <div class="carte kpi"><div class="libelle">Panier moyen</div><div class="nombre">65,09&nbsp;USD</div><div class="legende">montant moyen d'une session avec achat</div></div>
+    <div class="carte kpi"><div class="libelle">Taux de conversion</div><div class="nombre degrade">24,6&#8239;%</div><div class="legende">exactement 24,56&#8239;%&#8239;; 4&#8239;446 sessions avec achat</div></div>
+    <div class="carte kpi"><div class="libelle">Part mobile</div><div class="nombre">39,9&#8239;%</div><div class="legende">du trafic, et 41,0&#8239;% des achats</div></div>
+  </div>
+  <div class="ca"><span class="puce cyan">Chiffre d'affaires</span><span class="nombre">289&#8239;407&nbsp;USD</span><span>sur la période&#8239;; chaque carte affiche aussi sa variation et sa courbe quotidienne</span></div>
+  <div class="pied"><span class="marque"><i class="pastille"></i>Audience Lab · Soutenance · période complète, sans filtre</span><span class="page"><b>05</b> / 10</span></div>
+</section>
+
+<!-- ======================================================= 6. CONSTAT 1 -->
+<section class="slide">
+  <div class="constat-haut">
+    <div>
+      <div class="surtitre"><span class="num">06</span>Constat 1 · Quand&#8239;?</div>
+      <h2>Une audience <span class="degrade">saisonnière</span>, et de semaine</h2>
+    </div>
+  </div>
+  <div class="capture recadre" style="width:1136px; height:363px;">
+    <img src="../docs/captures/temporalite.png" alt="Évolution du trafic par jour" style="width:1502px; left:-319px; top:-357px;">
+  </div>
+  <div class="trio">
+    <div class="carte mini"><div class="nombre degrade">527</div><div class="legende">sessions le <b style="color:#E6E9F5">8 décembre 2020</b>, record&nbsp;: 2,7&nbsp;x la moyenne journalière</div></div>
+    <div class="carte mini"><div class="nombre degrade">53,8&#8239;%</div><div class="legende">des sessions entre le 23 novembre et le 18 décembre, en 26 jours</div></div>
+    <div class="carte mini"><div class="nombre degrade">159</div><div class="legende">sessions le mardi à 13&nbsp;h, créneau le plus actif&#8239;; week-end&nbsp;: 20,0&#8239;%</div></div>
+  </div>
+  <div class="pied"><span class="marque"><i class="pastille"></i>Audience Lab · Soutenance · onglet Temporalité</span><span class="page"><b>06</b> / 10</span></div>
+</section>
+
+<!-- ======================================================= 7. CONSTATS 2 ET 3 -->
+<section class="slide">
+  <div class="surtitre"><span class="num">07</span>Constats 2 et 3 · Sur quel appareil&#8239;? Où les perd-on&#8239;?</div>
+  <h2>Le mobile à parité, <span class="degrade">le panier en goulot</span></h2>
+  <div class="duo">
+    <div class="carte">
+      <div class="tete"><span class="puce cyan">Constat 2</span><h3>L'appareil ne fait pas la différence</h3></div>
+      <div class="paire">
+        <div><div class="nombre" style="color:#22D3EE">39,9&#8239;%</div><div class="legende">du trafic sur mobile</div></div>
+        <svg class="vers" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        <div><div class="nombre" style="color:#22D3EE">41,0&#8239;%</div><div class="legende">des achats sur mobile</div></div>
+      </div>
+      <div class="barres">
+        <div class="legende" style="font-size:15px">Taux de conversion par appareil</div>
+        <div class="barre"><span>desktop</span><div class="piste"><div class="rempli" style="width:95.6%; background:#8B5CF6"></div></div><span class="val">24,1&#8239;%</span></div>
+        <div class="barre"><span>mobile</span><div class="piste"><div class="rempli" style="width:100%; background:#22D3EE"></div></div><span class="val">25,2&#8239;%</span></div>
+        <div class="barre"><span>tablet</span><div class="piste"><div class="rempli" style="width:94.8%; background:#F472B6"></div></div><span class="val">23,9&#8239;%</span></div>
+      </div>
+      <p class="note-bas">Durées médianes de 64 à 69&nbsp;s&nbsp;: même engagement sur les trois supports.</p>
+    </div>
+    <div class="carte">
+      <div class="tete"><span class="puce">Constat 3</span><h3>Les acheteurs se perdent au panier</h3></div>
+      <div class="entonnoir">
+        <div class="marche" style="width:100%; background:linear-gradient(90deg,#7C4FE0,#8B5CF6)"><code>add_to_cart</code><span>sessions avec panier</span></div>
+        <div class="passage">puis <b>35,0&#8239;%</b> atteignent le paiement</div>
+        <div class="marche" style="width:72%; background:linear-gradient(90deg,#3B82F6,#22D3EE)"><code>begin_checkout</code></div>
+        <div class="passage">puis <b>47,1&#8239;%</b> vont jusqu'à l'achat</div>
+        <div class="marche" style="width:46%; background:linear-gradient(90deg,#DB2777,#F472B6)"><code>purchase</code></div>
+      </div>
+      <div class="alerte"><b>65,0&#8239;%</b> des sessions avec ajout au panier s'arrêtent avant le paiement&nbsp;: c'est l'étape à travailler.</div>
+    </div>
+  </div>
+  <div class="pied"><span class="marque"><i class="pastille"></i>Audience Lab · Soutenance · onglets Audience, Engagement, Conversion</span><span class="page"><b>07</b> / 10</span></div>
+</section>
+
+<!-- ======================================================= 8. DÉMONSTRATION -->
+<section class="slide">
+  <div class="surtitre"><span class="num">08</span>Démonstration</div>
+  <h2>Place au <span class="degrade">tableau de bord</span></h2>
+  <div class="demo">
+    <div>
+      <a class="lien" href="https://audience-lab.streamlit.app"><small>Application en ligne</small><span>audience-lab.streamlit.app</span></a>
+      <ol class="parcours">
+        <li><span><b>Accueil</b>&nbsp;: bandeau des six indicateurs et constats de l'onglet Synthèse</span></li>
+        <li><span><b>Période janvier 2021</b>&nbsp;: variations face à décembre</span></li>
+        <li><span><b>Temporalité</b>&nbsp;: pic du 8 décembre et heatmap heure x jour</span></li>
+        <li><span><b>Audience et Engagement</b>&nbsp;: filtre mobile, pays, catégories</span></li>
+        <li><span><b>Conversion</b>&nbsp;: l'entonnoir et sa plus forte perte</span></li>
+        <li><span><b>Données</b>&nbsp;: export CSV, puis bascule vers le thème sombre</span></li>
+      </ol>
+      <p class="secours">Plan B hors connexion&nbsp;: <code>streamlit run app.py</code></p>
+    </div>
+    <div class="navigateur">
+      <div class="barre-nav"><i style="background:#F87171"></i><i style="background:#FBBF24"></i><i style="background:#34D399"></i><span class="url">https://audience-lab.streamlit.app</span></div>
+      <img src="../docs/captures/accueil_clair.png" alt="Audience Lab en thème clair">
+    </div>
+  </div>
+  <div class="pied"><span class="marque"><i class="pastille"></i>Audience Lab · Soutenance · environ 6 minutes</span><span class="page"><b>08</b> / 10</span></div>
+</section>
+
+<!-- ======================================================= 9. CONCLUSION -->
+<section class="slide">
+  <div class="surtitre"><span class="num">09</span>Conclusion et perspectives</div>
+  <h2>Trois décisions <span class="degrade">pour la boutique</span></h2>
+  <div class="recos">
+    <div class="carte reco">
+      <div class="rang degrade">Priorité 1</div>
+      <h3>Préparer la fenêtre du 23 novembre au 18 décembre</h3>
+      <p>Campagnes avant le Black Friday, stocks sécurisés, dates limites de livraison en avant.</p>
+      <div class="appui nombre degrade">53,8&#8239;% des sessions</div>
+    </div>
+    <div class="carte reco">
+      <div class="rang degrade">Priorité 2</div>
+      <h3>Faire passer le panier au paiement</h3>
+      <p>Frais de livraison affichés tôt, relance des paniers, paiement express.</p>
+      <div class="appui nombre degrade">65,0&#8239;% de perte</div>
+    </div>
+    <div class="carte reco">
+      <div class="rang degrade">Priorité 3</div>
+      <h3>Agir en semaine, mobile à parité</h3>
+      <p>Mardi et mercredi en tête&#8239;; tester chaque évolution sur les deux supports.</p>
+      <div class="appui nombre degrade">x&nbsp;1,9 mardi / dimanche</div>
+    </div>
+  </div>
+  <div class="bas">
+    <div class="carte">
+      <h4 style="color:#FBBF24">Limites assumées</h4>
+      <ul>
+        <li>Collecte incomplète&nbsp;: avant le 16 novembre, seuls les achats&#8239;; <code>begin_checkout</code> dès le 23 novembre.</li>
+        <li>Fuseau horaire non documenté, échantillon obfusqué par Google.</li>
+      </ul>
+    </div>
+    <div class="carte">
+      <h4 style="color:#22D3EE">Perspectives</h4>
+      <ul>
+        <li>Cohortes et valeur vie client avec <code>users.csv</code>.</li>
+        <li>Raccourci «&nbsp;à partir du 23 novembre&nbsp;»&#8239;; sources de trafic et pages vues.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pied"><span class="marque"><i class="pastille"></i>Audience Lab · Soutenance · détail&nbsp;: rapport, sections 7 et 8</span><span class="page"><b>09</b> / 10</span></div>
+</section>
+
+<!-- ======================================================= 10. MERCI -->
+<section class="slide merci">
+  <div class="logo">
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 4 8-9"/><path d="M15 7h5v5"/></svg>
+  </div>
+  <h2>Merci<span class="cyan-texte">.</span></h2>
+  <p class="sous">Vos questions sont les bienvenues.</p>
+  <div class="liens">
+    <div class="carte"><small>Application</small><span>audience-lab.streamlit.app</span></div>
+    <div class="carte"><small>Code et données</small><span>github.com/Abdazz/audience-lab</span></div>
+    <div class="carte"><small>Rapport d'analyse</small><span>rapport/rapport_analyse.pdf</span></div>
+  </div>
+  <p class="signature"><b>Abdoul-Aziz ZOROM</b> · Master 1 Intelligence Artificielle · Université Aube-Nouvelle · 19 octobre 2026</p>
+  <div class="pied"><span class="marque"><i class="pastille"></i>Audience Lab · Soutenance</span><span class="page"><b>10</b> / 10</span></div>
+</section>
+
+</body>
+</html>
