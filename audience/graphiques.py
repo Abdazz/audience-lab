@@ -397,7 +397,7 @@ def fig_carte_pays(sessions: pd.DataFrame, theme: Theme | None = None) -> go.Fig
     maxi = int(np.ceil(df["log_sessions"].max())) if df["log_sessions"].max() > 0 else 1
     graduations = list(range(0, maxi + 1))
     fig.update_layout(
-        height=440, margin=dict(l=0, r=0, t=64, b=0),
+        height=440, margin=dict(l=0, r=72, t=64, b=0),  # place pour la barre de couleur
         coloraxis=dict(cmin=-0.75, cmax=max(maxi, 1)),
         coloraxis_colorbar=dict(
             title_text="Sessions", tickvals=graduations,

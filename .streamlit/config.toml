@@ -1,0 +1,19 @@
+# Configuration Streamlit d'Audience Lab.
+# Le thème natif sert de base sombre ; le CSS de audience/theme.py gère le mode clair.
+
+[theme]
+base = "dark"
+primaryColor = "#8B5CF6"
+backgroundColor = "#0B1020"
+secondaryBackgroundColor = "#141B35"
+textColor = "#E6E9F5"
+font = "sans serif"
+
+[server]
+headless = true
+
+[browser]
+gatherUsageStats = false
+
+[client]
+toolbarMode = "minimal"

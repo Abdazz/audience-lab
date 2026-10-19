@@ -455,7 +455,7 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
   background: var(--al-surface);
   border: 1px solid var(--al-bordure);
   border-radius: var(--al-rayon);
-  padding: 0.6rem 0.6rem 0.2rem;
+  padding: 0; /* la figure occupe toute la carte (sinon son bord droit est rogné) */
   box-shadow: var(--al-ombre);
   overflow: hidden;
 }
