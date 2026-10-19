@@ -22,6 +22,8 @@ MESSAGE_VIDE = "Aucune donnée pour ces filtres"
 APPAREILS = ("desktop", "mobile", "tablet")
 ETAPES = ("add_to_cart", "begin_checkout", "purchase")
 
+UNITES = {"duration_s": " s", "n_events": " actions", "cart_value_usd": " USD"}
+
 LIBELLES_METRIQUES = {
     "duration_s": "Durée de session (s)",
     "n_events": "Actions par session",
@@ -96,6 +98,17 @@ def _couleurs_appareils(theme: Theme) -> dict[str, str]:
 def _sous_titre(fig: go.Figure, texte: str) -> None:
     """Sous-titre sous le titre ; la marge haute s'agrandit pour la légende."""
     fig.update_layout(title_subtitle_text=texte, margin_t=max(fig.layout.margin.t or 0, 96))
+
+
+def _valeur_reelle(x: float) -> str:
+    """Valeur lisible : une décimale sous 10, entier au-delà (format français)."""
+    return formater_nombre(x, 1 if x < 10 else 0)
+
+
+def _moustache_haute(valeurs: pd.Series) -> float:
+    """Extrémité haute de la moustache (Q3 + 1,5 IQR, bornée par le maximum)."""
+    q1, q3 = valeurs.quantile([0.25, 0.75])
+    return float(min(valeurs.max(), q3 + 1.5 * (q3 - q1)))
 
 
 def _couleur_texte_sur(fond: str) -> str:
@@ -310,7 +323,7 @@ def fig_categories(
     if ca:
         achats = events[events["type"] == "purchase"]
         valeurs = achats.groupby("item_category")["price_in_usd"].sum()
-        axe, format_valeur, unite = "Chiffre d'affaires (USD)", "%{x:,.0f} $", " $"
+        axe, format_valeur, unite = "Chiffre d'affaires (USD)", "%{x:,.0f}", " USD"
     else:
         valeurs = events.loc[events["type"] == "add_to_cart", "item_category"].value_counts()
         axe, format_valeur, unite = "Ajouts au panier", "%{x:,.0f}", ""
@@ -332,14 +345,14 @@ def fig_categories(
     appliquer_theme(fig, theme)
     fig.update_traces(
         marker_color=theme.accent, marker_line_width=0,
-        texttemplate=format_valeur, textposition="outside", cliponaxis=False,
+        texttemplate="%{x:,.0f}", textposition="outside", cliponaxis=False,
         textfont=dict(size=12, color=theme.texte_secondaire),
         hovertemplate=(
-            "<b>%{y}</b><br>" + format_valeur +
+            "<b>%{y}</b><br>" + format_valeur + unite +
             "<br>%{customdata[0]:.1%} du total<extra></extra>"
         ),
     )
-    fig.update_xaxes(tickformat=",.0f", ticksuffix=unite, showgrid=True)
+    fig.update_xaxes(tickformat=",.0f", showgrid=True)  # unité dans le titre de l'axe
     fig.update_yaxes(showgrid=False, ticksuffix="  ")
     fig.update_layout(height=max(320, 34 * len(df) + 110), margin=dict(r=60))
     return fig
@@ -504,8 +517,8 @@ def fig_engagement_boite(
         fig.update_yaxes(dtick=1)  # une graduation par puissance de 10
     else:
         # Axe resserré sur les moustaches pour que les boîtes restent lisibles.
-        q1, q3 = df[metrique].quantile([0.25, 0.75])
-        moustache = min(float(df[metrique].max()), q3 + 1.5 * (q3 - q1))
+        # Plus haute moustache parmi les appareils : aucune boîte n'est coupée.
+        moustache = max(_moustache_haute(v) for _, v in df.groupby("device")[metrique])
         if moustache > 0:
             fig.update_yaxes(range=[0, moustache * 1.2])
             note = "Axe resserré sur les boîtes : valeurs extrêmes hors cadre (double-clic pour tout voir)"
@@ -560,7 +573,7 @@ def fig_engagement_densite(
     # Aplat léger + contour plein : les superpositions restent lisibles sans virer au brun.
     for trace in fig.data:
         couleur = theme.couleurs_appareils.get(trace.name, theme.accent)
-        trace.marker = dict(color=rgba(couleur, 0.45), line=dict(color=couleur, width=1.2))
+        trace.marker = dict(color=rgba(couleur, 0.18), line=dict(color=couleur, width=1.5))
     fig.update_layout(barcornerradius=0, bargap=0.04, hovermode="x unified", height=420)
     fig.update_yaxes(title_text="Densité", tickformat=".2~g")
     if log:
@@ -568,8 +581,23 @@ def fig_engagement_densite(
         fig.update_xaxes(
             title_text=f"{libelle}, échelle log",
             tickvals=graduations, ticktext=[formater_nombre(10 ** k) for k in graduations],
-            hoverformat=".2f",
+            unifiedhovertitle=dict(text=f"<b>{libelle}</b>"),
         )
+        # L'axe porte des log10 : un point invisible par classe donne au survol
+        # les bornes de la classe en valeurs réelles (« De 200 à 251 s »).
+        bords = debut + taille * np.arange(len(np.arange(debut, fin + taille / 2, taille)) + 1)
+        unite = UNITES.get(metrique, "")
+        etiquettes = [
+            [f"De {_valeur_reelle(10 ** a)} à {_valeur_reelle(10 ** b)}{unite}"]
+            for a, b in zip(bords[:-1], bords[1:])
+        ]
+        fig.add_trace(go.Scatter(
+            x=(bords[:-1] + bords[1:]) / 2, y=np.zeros(len(etiquettes)),
+            mode="markers", marker=dict(opacity=0, color=theme.texte_secondaire),
+            showlegend=False, name="Classe", customdata=etiquettes,
+            hovertemplate="%{customdata[0]}<extra></extra>",
+        ))
+        fig.data = (fig.data[-1],) + tuple(fig.data[:-1])  # bornes en tête de l'info-bulle
     else:
         fig.update_xaxes(range=[debut, fin], tickformat=",.0f", title_text=libelle)
     _sous_titre(fig, note + " ; aire de chaque appareil normalisée à 1")
@@ -635,7 +663,10 @@ def fig_entonnoir(
             " begin_checkout sans add_to_cart"
         )
     _sous_titre(fig, sous_titre)
-    fig.update_yaxes(showgrid=False, title_text="", ticksuffix="  ")
+    fig.update_yaxes(
+        showgrid=False, title_text="", ticksuffix="  ",
+        categoryorder="array", categoryarray=list(ETAPES), autorange="reversed",
+    )
     fig.update_xaxes(showgrid=False, visible=False)
     fig.update_layout(height=400, funnelmode="stack", uniformtext=dict(minsize=11, mode="hide"))
     return fig

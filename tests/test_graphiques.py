@@ -7,6 +7,7 @@ import pytest
 
 from audience import graphiques as g
 from audience.donnees import charger_donnees
+from audience.kpis import formater_nombre
 from audience.theme import THEMES
 
 
@@ -144,3 +145,52 @@ def test_top_pays_dix_barres(donnees):
     _, sessions = donnees
     fig = g.fig_top_pays(sessions, theme=THEMES["clair"])
     assert len(fig.data[0].y) == 10
+
+
+def test_entonnoir_add_to_cart_en_haut(donnees):
+    events, sessions = donnees
+    fig = g.fig_entonnoir(sessions, events, theme=THEMES["sombre"])
+    axe = fig.layout.yaxis
+    assert list(axe.categoryarray) == ["add_to_cart", "begin_checkout", "purchase"]
+    # Catégorie 0 en haut : l'axe des étapes est inversé.
+    assert axe.autorange == "reversed"
+
+
+def test_densite_log_survol_en_valeurs_reelles(donnees):
+    _, sessions = donnees
+    fig = g.fig_engagement_densite(sessions, "duration_s", True, theme=THEMES["sombre"])
+    survol = [t for t in fig.data if t.type == "scatter"]
+    assert len(survol) == 1
+    etiquettes = [c[0] for c in survol[0].customdata]
+    assert all(e.startswith("De ") and " à " in e and e.endswith(" s") for e in etiquettes)
+    # Première classe : commence à la plus petite durée non nulle (1 s), pas à log10 = 0.
+    mini = sessions.loc[sessions["duration_s"] > 0, "duration_s"].min()
+    assert mini < 10
+    assert etiquettes[0].startswith(f"De {formater_nombre(mini, 1)} ")
+    assert fig.layout.xaxis.hoverformat != ".2f"
+    for trace in fig.data:
+        if trace.type == "histogram":
+            assert "%{x" not in trace.hovertemplate
+
+
+def test_boite_zoom_ne_coupe_aucun_appareil():
+    sessions = pd.DataFrame({
+        "device": ["desktop"] * 200 + ["tablet"] * 20,
+        "duration_s": list(range(200)) + list(range(1000, 3000, 100)),
+    })
+    fig = g.fig_engagement_boite(sessions, "duration_s", False, theme=THEMES["clair"])
+    tablette = sessions.loc[sessions["device"] == "tablet", "duration_s"]
+    q1, q3 = tablette.quantile([0.25, 0.75])
+    moustache_tablette = min(tablette.max(), q3 + 1.5 * (q3 - q1))
+    assert fig.layout.yaxis.range[1] >= moustache_tablette
+
+
+def test_devise_uniforme_usd(donnees):
+    events, _ = donnees
+    fig = g.fig_categories(events, "revenue", theme=THEMES["sombre"])
+    textes = [fig.layout.xaxis.title.text or "", fig.layout.xaxis.ticksuffix or "",
+              fig.layout.title.text or ""]
+    for trace in fig.data:
+        textes += [trace.texttemplate or "", trace.hovertemplate or ""]
+    assert not any("$" in t.replace("%{", "") for t in textes)
+    assert "USD" in fig.layout.xaxis.title.text

@@ -242,7 +242,7 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
 .stTabs [data-baseweb="tab"][aria-selected="true"] { color: var(--al-texte) !important; }
 .stTabs [data-baseweb="tab-highlight"] { background: var(--al-degrade) !important; height: 3px; border-radius: 3px; }
 .stTabs [data-baseweb="tab-border"] { display: none; }
-.stTabs [data-baseweb="tab-panel"] { padding-top: 1.25rem; }
+.stTabs [data-baseweb="tab-panel"], .stTabs [role="tabpanel"] { padding-top: 1.25rem; }
 
 /* ---- Cartes KPI (st.metric) ----------------------------------------------- */
 [data-testid="stMetric"] {
@@ -548,9 +548,10 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
 
 /* ---- Apparition douce du contenu des onglets ------------------------------ */
 @keyframes al-apparition { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-.stTabs [data-baseweb="tab-panel"] > div { animation: al-apparition 0.35s ease-out; }
+.stTabs [data-baseweb="tab-panel"] > div, .stTabs [role="tabpanel"] > div { animation: al-apparition 0.35s ease-out; }
 @media (prefers-reduced-motion: reduce) {
-  .stTabs [data-baseweb="tab-panel"] > div, [data-testid="stMetric"], .al-constat { animation: none; transition: none; }
+  .stTabs [data-baseweb="tab-panel"] > div, .stTabs [role="tabpanel"] > div,
+  [data-testid="stMetric"], .al-constat { animation: none; transition: none; }
 }
 """
 
