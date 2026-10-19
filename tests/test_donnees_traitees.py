@@ -102,3 +102,15 @@ def test_figures_rapport():
     assert DOSSIER_FIGURES.is_dir()
     absentes = [nom for nom in FIGURES_ATTENDUES if not (DOSSIER_FIGURES / nom).is_file()]
     assert not absentes, f"Figures absentes : {absentes}"
+
+
+@pytest.mark.parametrize("colonne, indicateur", [
+    ("duration_s", "is_outlier_duration"),
+    ("n_events", "is_outlier_events"),
+])
+def test_indicateurs_aberrants_iqr(sessions, colonne, indicateur):
+    q1, q3 = sessions[colonne].quantile([0.25, 0.75])
+    borne = q3 + 1.5 * (q3 - q1)
+    attendu = sessions[colonne] > borne
+    assert (sessions[indicateur] == attendu).all()
+    assert sessions[indicateur].any()
