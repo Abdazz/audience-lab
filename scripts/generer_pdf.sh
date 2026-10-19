@@ -15,10 +15,20 @@ if [ "$#" -ne 2 ]; then
   exit 2
 fi
 
+if [ ! -f "$1" ]; then
+  echo "Erreur : fichier d'entrée introuvable : $1" >&2
+  exit 1
+fi
+
 entree="$(realpath "$1")"
 sortie="$(realpath -m "$2")"
 dossier_scripts="$(cd "$(dirname "$0")" && pwd)"
-navigateur="${CHROMIUM:-$(command -v chromium || command -v chromium-browser || command -v google-chrome)}"
+navigateur="${CHROMIUM:-$(command -v chromium || command -v chromium-browser || command -v google-chrome || true)}"
+if [ -z "$navigateur" ] || [ ! -x "$navigateur" ]; then
+  echo "Erreur : aucun navigateur Chromium trouvé (chromium, chromium-browser ou google-chrome)." >&2
+  echo "Installez-en un ou indiquez son chemin dans la variable CHROMIUM, par exemple : CHROMIUM=/usr/bin/chromium $0 <entrée.html> <sortie.pdf>" >&2
+  exit 1
+fi
 
 imprimer() {
   # Le budget de temps virtuel laisse aux polices web (Inter) et aux images le temps de charger.

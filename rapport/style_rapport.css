@@ -26,7 +26,7 @@
   size: A4;
   margin: 15mm 16mm 17mm 16mm;
   @bottom-left {
-    content: "Audience Lab \00B7  Rapport d'analyse";
+    content: "Audience Lab \00B7  Rapport d\2019 analyse";
     font-family: "Inter", "Noto Sans", sans-serif;
     font-size: 7.5pt;
     color: #64748B;
@@ -578,7 +578,7 @@ figure .cadre {
   background: var(--surface);
 }
 figure img { width: 100%; display: block; }
-figure.reduite .cadre { width: 66%; margin: 0 auto; }
+figure.reduite .cadre { width: 74%; margin: 0 auto; }
 figure.reduite figcaption { width: 80%; margin-left: auto; margin-right: auto; }
 figcaption {
   margin-top: 1.5mm;
@@ -595,7 +595,7 @@ figcaption b { color: var(--texte); font-weight: 700; }
   box-shadow: 0 1.5mm 4mm rgba(15, 23, 42, 0.08);
   background: #0B1020;
 }
-.capture img { width: 100%; display: block; }
+.capture img { width: 100%; display: block; max-width: none; }
 .capture.rognee { aspect-ratio: 1600 / 920; }
 .capture.rognee img { margin-top: -5.2%; }
 
