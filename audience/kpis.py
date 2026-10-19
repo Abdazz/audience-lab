@@ -14,6 +14,8 @@ CLES_KPIS = (
 )
 # Indicateurs exprimés en proportion : la variation est une différence en points.
 CLES_POINTS = ("taux_conversion", "part_mobile")
+# Valeur GA4 d'un pays non identifié : ce n'est pas un pays.
+PAYS_NON_IDENTIFIE = "(not set)"
 
 
 def calculer_kpis(sessions: pd.DataFrame) -> dict[str, float | None]:
@@ -34,6 +36,11 @@ def calculer_kpis(sessions: pd.DataFrame) -> dict[str, float | None]:
         "part_mobile": float((sessions["device"] == "mobile").mean()),
         "chiffre_affaires_usd": float(sessions["revenue_usd"].sum()),
     }
+
+
+def compter_pays(pays: pd.Series) -> int:
+    """Nombre de pays distincts, sans « (not set) » (pays non identifié) ni valeur manquante."""
+    return int(pays[pays.ne(PAYS_NON_IDENTIFIE)].nunique())
 
 
 def variations(actuel: dict, precedent: dict) -> dict[str, float | None]:

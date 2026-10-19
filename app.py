@@ -31,7 +31,8 @@ from audience.donnees import (
     Filtres, charger_donnees, filtrer, normaliser_periode, periode_de_reference,
 )
 from audience.kpis import (
-    CLES_POINTS, calculer_kpis, formater_duree, formater_nombre, typo, variations,
+    CLES_POINTS, PAYS_NON_IDENTIFIE, calculer_kpis, compter_pays, formater_duree,
+    formater_nombre, typo, variations,
 )
 from audience.theme import THEMES, Theme, css, obtenir_theme
 
@@ -205,6 +206,7 @@ CSS_APP = """
 }
 .al-repere-valeur { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.02em; color: var(--al-texte) !important; }
 .al-repere-libelle { font-size: 0.75rem; color: var(--al-texte-2) !important; margin-top: 0.1rem; }
+.al-repere-note { font-size: 0.68rem; color: var(--al-texte-2) !important; opacity: 0.85; }
 
 /* État vide */
 .al-vide {
@@ -346,7 +348,8 @@ def referentiel() -> dict:
         "n_sessions": len(sessions),
         "n_utilisateurs": int(sessions["user_id"].nunique()),
         "n_evenements": len(events),
-        "n_pays": int(sessions["country"].nunique()),
+        "n_pays": compter_pays(sessions["country"]),
+        "n_pays_non_identifies": int((sessions["country"] == PAYS_NON_IDENTIFIE).sum()),
     }
 
 
@@ -822,17 +825,20 @@ def onglet_synthese() -> None:
         kpis = calculer_kpis(SE)
         n_achats = int(SE["purchased"].sum()) if not VIDE else 0
         reperes = [
-            (usd(kpis["chiffre_affaires_usd"] or 0, 0), "Chiffre d'affaires"),
-            (formater_nombre(n_achats), "Sessions avec achat"),
-            (formater_nombre(len(EV)), "Événements"),
-            (formater_nombre(SE["country"].nunique() if not VIDE else 0), "Pays représentés"),
+            (usd(kpis["chiffre_affaires_usd"] or 0, 0), "Chiffre d'affaires", ""),
+            (formater_nombre(n_achats), "Sessions avec achat", ""),
+            (formater_nombre(len(EV)), "Événements", ""),
+            (formater_nombre(compter_pays(SE["country"])), "Pays représentés",
+             f"hors « {PAYS_NON_IDENTIFIE} »"),
         ]
         html_fr(
             '<div class="al-reperes">'
             + "".join(
                 f'<div class="al-repere"><div class="al-repere-valeur">{v}</div>'
-                f'<div class="al-repere-libelle">{esc(l)}</div></div>'
-                for v, l in reperes
+                f'<div class="al-repere-libelle">{esc(l)}</div>'
+                + (f'<div class="al-repere-note">{esc(n)}</div>' if n else "")
+                + "</div>"
+                for v, l, n in reperes
             )
             + "</div>"
         )
@@ -848,7 +854,9 @@ def onglet_synthese() -> None:
             f"<dt>Volume</dt><dd>{formater_nombre(REF['n_sessions'])} sessions, "
             f"{formater_nombre(REF['n_utilisateurs'])} utilisateurs, "
             f"{formater_nombre(REF['n_evenements'])} événements (add_to_cart, "
-            f"begin_checkout, purchase), {formater_nombre(REF['n_pays'])} pays.</dd>"
+            f"begin_checkout, purchase), {formater_nombre(REF['n_pays'])} pays "
+            f"(hors « {PAYS_NON_IDENTIFIE} », pays non identifié de "
+            f"{formater_nombre(REF['n_pays_non_identifies'])} sessions).</dd>"
             "<dt>Limites</dt><dd><ul>"
             "<li>Fuseau horaire non documenté par la source (heures probablement "
             "celles de la propriété GA, aux États-Unis).</li>"
@@ -960,7 +968,8 @@ def onglet_audience() -> None:
             figure("carte"), "carte_pays",
             f"<b>{esc(REF['noms_pays'].get(premier, premier))}</b> concentre "
             f"{pct(par_pays.iloc[0] / len(SE))} des sessions, sur "
-            f"{formater_nombre(len(par_pays))} pays représentés. L'échelle de couleur "
+            f"{formater_nombre(compter_pays(SE['country']))} pays représentés "
+            f"(hors « {PAYS_NON_IDENTIFIE} »). L'échelle de couleur "
             "logarithmique laisse voir les petits marchés ; survolez un pays pour le détail.",
         )
     with droite:

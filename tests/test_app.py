@@ -71,6 +71,21 @@ def test_app_bascule_theme():
     assert at.session_state["theme"] == "clair"
 
 
+def test_app_nombre_de_pays_hors_not_set():
+    """108 pays : « (not set) » n'est pas compté, et l'aide le précise."""
+    at = _app().run()
+    reperes = " ".join(_html(at, "al-reperes"))
+    assert '<div class="al-repere-valeur">108</div>' in reperes
+    assert "(not set)" in reperes
+    apropos = " ".join(_html(at, "al-carte al-apropos"))
+    assert "108 pays" in apropos and "109" not in apropos
+    at.session_state["onglet"] = "Audience"
+    at.run()
+    assert not at.exception
+    legendes = " ".join(_html(at, "al-legende"))
+    assert "108 pays" in legendes and "109" not in legendes
+
+
 def test_app_filtres_vides():
     at = _filtres_vides(_app().run())
     assert not at.exception

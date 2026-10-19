@@ -6,6 +6,7 @@ import pytest
 
 from audience.kpis import (
     calculer_kpis,
+    compter_pays,
     formater_duree,
     formater_nombre,
     typo,
@@ -107,3 +108,11 @@ def test_typo_espaces_insecables():
     assert f"{nbsp};" in texte and f"«{nbsp}oui{nbsp}»{nbsp}?" in texte
     assert f"5{nbsp}min{nbsp}41{nbsp}s" in texte and f"12{nbsp}USD" in texte and f"1,2{nbsp}pts" in texte
     assert "159 sessions" in texte  # pas d'unité : espace ordinaire conservée
+
+
+def test_compter_pays_exclut_not_set():
+    """« (not set) » et les valeurs manquantes ne sont pas des pays."""
+    serie = pd.Series(["US", "FR", "US", "(not set)", None, "IN"])
+    assert compter_pays(serie) == 3
+    assert compter_pays(pd.Series([], dtype="object")) == 0
+    assert compter_pays(pd.Series(["(not set)"])) == 0
