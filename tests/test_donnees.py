@@ -11,6 +11,7 @@ from audience.donnees import (
     charger_donnees,
     filtrer,
     normaliser_periode,
+    periode_de_reference,
     periode_precedente,
 )
 
@@ -108,3 +109,51 @@ def test_periode_precedente():
 def test_charger_donnees():
     events, sessions = charger_donnees()
     assert len(events) > 0 and len(sessions) > 0
+
+
+DEBUT_DONNEES = date(2020, 11, 1)
+
+
+def test_reference_periode_precedente_couverte():
+    """Du 1er au 30 décembre : la période précédente (novembre) est dans les données."""
+    f = Filtres(date(2020, 12, 1), date(2020, 12, 30), appareils=("mobile",))
+    comparee, reference, mode = periode_de_reference(f, DEBUT_DONNEES)
+    assert mode == "precedente"
+    assert comparee == f
+    assert reference == periode_precedente(f)
+    assert reference.appareils == ("mobile",)
+
+
+def test_reference_moities_si_precedente_hors_donnees():
+    """Période complète (92 jours) : seconde moitié contre première moitié."""
+    f = Filtres(date(2020, 11, 1), date(2021, 1, 31), pays=("US",))
+    comparee, reference, mode = periode_de_reference(f, DEBUT_DONNEES)
+    assert mode == "moities"
+    assert (reference.debut, reference.fin) == (date(2020, 11, 1), date(2020, 12, 16))
+    assert (comparee.debut, comparee.fin) == (date(2020, 12, 17), date(2021, 1, 31))
+    assert comparee.pays == reference.pays == ("US",)
+
+
+def test_reference_moities_si_precedente_partiellement_hors_donnees():
+    """Du 10 au 30 novembre : la période précédente commencerait le 19 octobre."""
+    f = Filtres(date(2020, 11, 10), date(2020, 11, 30))
+    comparee, reference, mode = periode_de_reference(f, DEBUT_DONNEES)
+    assert mode == "moities"
+    # 21 jours : deux moitiés de 10 jours, le jour du milieu (20 novembre) n'est pas comparé.
+    assert (reference.debut, reference.fin) == (date(2020, 11, 10), date(2020, 11, 19))
+    assert (comparee.debut, comparee.fin) == (date(2020, 11, 21), date(2020, 11, 30))
+
+
+def test_reference_deux_jours():
+    f = Filtres(date(2020, 11, 1), date(2020, 11, 2))
+    comparee, reference, mode = periode_de_reference(f, DEBUT_DONNEES)
+    assert mode == "moities"
+    assert (reference.debut, reference.fin) == (date(2020, 11, 1), date(2020, 11, 1))
+    assert (comparee.debut, comparee.fin) == (date(2020, 11, 2), date(2020, 11, 2))
+
+
+def test_reference_un_jour_sans_comparaison():
+    for jour in (date(2020, 11, 1), date(2020, 12, 15)):
+        f = Filtres(jour, jour)
+        _, _, mode = periode_de_reference(f, DEBUT_DONNEES)
+        assert mode == "aucune"

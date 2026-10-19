@@ -21,16 +21,17 @@ import html
 from dataclasses import dataclass
 from datetime import date
 
+import numpy as np
 import pandas as pd
 import streamlit as st
 
 from audience import graphiques as g
 from audience.constats import JOURS_FR, MOIS_FR, Constat, generer_constats
 from audience.donnees import (
-    Filtres, charger_donnees, filtrer, normaliser_periode, periode_precedente,
+    Filtres, charger_donnees, filtrer, normaliser_periode, periode_de_reference,
 )
 from audience.kpis import (
-    CLES_POINTS, calculer_kpis, formater_duree, formater_nombre, variations,
+    CLES_POINTS, calculer_kpis, formater_duree, formater_nombre, typo, variations,
 )
 from audience.theme import THEMES, Theme, css, obtenir_theme
 
@@ -104,6 +105,8 @@ COLONNES_APERCU = {
     "purchased": "Achat",
 }
 COLONNES_NUMERIQUES = {"duration_s", "n_events", "n_items", "cart_value_usd", "revenue_usd"}
+COLONNES_MONTANTS = {"cart_value_usd", "revenue_usd"}  # toujours deux décimales
+METRIQUES_LOG_PAR_DEFAUT = {"duration_s", "cart_value_usd"}  # longues traînes
 COLONNES_BOOLEENNES = {"reached_checkout", "purchased"}
 
 # Styles propres à la mise en page de app.py ; ils réutilisent les variables
@@ -348,16 +351,72 @@ def referentiel() -> dict:
 
 
 @st.cache_data(show_spinner=False, max_entries=64)
+def positions_filtrees(f: Filtres) -> tuple[np.ndarray, np.ndarray]:
+    """Résultat de `filtrer` pour f, en cache sous forme de positions de lignes.
+
+    Garder les positions (quelques Mo) plutôt que les tables (jusqu'à 170 Mo par filtre
+    une fois sérialisées) : la reconstruction par `take` coûte environ 2 ms, alors que
+    relire une table complète depuis le cache en coûte plus de 100.
+    """
+    ev, se = filtrer(EVENTS, SESSIONS, f)
+    return (
+        EVENTS.index.get_indexer(ev.index).astype(np.int32),
+        SESSIONS.index.get_indexer(se.index).astype(np.int32),
+    )
+
+
+def tables(f: Filtres) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Événements et sessions retenus par f (filtrage mis en cache)."""
+    pos_ev, pos_se = positions_filtrees(f)
+    return EVENTS.take(pos_ev), SESSIONS.take(pos_se)
+
+
+@st.cache_data(show_spinner=False, max_entries=256)
+def kpis_caches(f: Filtres) -> dict:
+    """Indicateurs clés de f (période affichée, période ou moitiés de référence)."""
+    return calculer_kpis(tables(f)[1])
+
+
+# Figures : (événements, sessions, thème, paramètres) -> figure Plotly.
+CONSTRUCTEURS = {
+    "evolution": lambda ev, se, t, **p: g.fig_evolution(se, p["granularite"], p["par_appareil"], theme=t),
+    "heatmap": lambda ev, se, t: g.fig_heatmap_heure_jour(se, theme=t),
+    "appareils": lambda ev, se, t: g.fig_parts_appareils(se, theme=t),
+    "categories": lambda ev, se, t, **p: g.fig_categories(ev, p["metrique"], theme=t),
+    "carte": lambda ev, se, t: g.fig_carte_pays(se, theme=t),
+    "top_pays": lambda ev, se, t: g.fig_top_pays(se, theme=t),
+    "boite": lambda ev, se, t, **p: g.fig_engagement_boite(se, p["metrique"], False, theme=t),
+    "densite": lambda ev, se, t, **p: g.fig_engagement_densite(se, p["metrique"], p["log"], theme=t),
+    "entonnoir": lambda ev, se, t: g.fig_entonnoir(se, ev, theme=t),
+}
+
+
+@st.cache_data(show_spinner=False, max_entries=128)
+def figure_cachee(nom: str, f: Filtres, theme_nom: str, **params):
+    """Figure Plotly mise en cache par (figure, filtres, thème, réglages) : un retour
+    sur un onglet déjà vu ne recalcule rien."""
+    ev, se = tables(f)
+    return CONSTRUCTEURS[nom](ev, se, obtenir_theme(theme_nom), **params)
+
+
+def figure(nom: str, **params):
+    return figure_cachee(nom, FILTRES, THEME.nom, **params)
+
+
+@st.cache_data(show_spinner=False, max_entries=64)
 def constats_caches(f: Filtres) -> list[Constat]:
     """Constats de l'onglet Synthèse (calcul le plus coûteux : mis en cache par filtre)."""
-    events, sessions = charger()
-    ev, se = filtrer(events, sessions, f)
-    return generer_constats(ev, se)
+    return generer_constats(*tables(f))
 
 
 # ---------------------------------------------------------------------------
 # Outils de mise en forme
 # ---------------------------------------------------------------------------
+
+def html_fr(contenu: str) -> None:
+    """Affiche un bloc HTML rédigé, avec espaces insécables à la française."""
+    st.html(typo(contenu))
+
 
 def esc(texte) -> str:
     """Échappe un texte destiné à du HTML."""
@@ -380,6 +439,12 @@ def date_longue(jour) -> str:
     return f"{premier} {MOIS_FR[jour.month - 1]} {jour.year}"
 
 
+def usd(x: float | None, decimales: int = 0) -> str:
+    """Montant « 65,09 USD » : espace insécable pleine (la fine colle trop au sigle en gras)."""
+    texte = formater_nombre(x, decimales)
+    return texte if x is None else texte + NBSP + "USD"
+
+
 def pct(x: float | None, decimales: int = 1) -> str:
     return formater_nombre(None if x is None else x * 100, decimales, " %")
 
@@ -390,7 +455,7 @@ def valeur_metrique(metrique: str, x: float) -> str:
         return formater_duree(x)
     if metrique == "n_events":
         return formater_nombre(x, 0, " actions")
-    return formater_nombre(x, 0, " USD")
+    return usd(x, 0)
 
 
 def libelle_pays(code: str) -> str:
@@ -473,10 +538,10 @@ with st.sidebar:
 # Filtres effectifs (une liste vide signifie « pas de filtre »).
 DEBUT, FIN = normaliser_periode(periode_brute, (REF["debut"], REF["fin"]))
 FILTRES = Filtres(DEBUT, FIN, tuple(appareils), tuple(pays), tuple(categories))
-EV, SE = filtrer(EVENTS, SESSIONS, FILTRES)
+EV, SE = tables(FILTRES)
 VIDE = len(SE) == 0
-PRECEDENT = periode_precedente(FILTRES)
-_, SE_PRECEDENT = filtrer(EVENTS, SESSIONS, PRECEDENT)
+# Base des variations : période précédente si couverte, sinon moitiés de la période.
+COMPAREE, REFERENCE, MODE_COMPARAISON = periode_de_reference(FILTRES, REF["debut"])
 
 
 def csv_sessions() -> bytes:
@@ -503,10 +568,10 @@ def bouton_export(cle: str) -> None:
 with st.sidebar:
     st.html('<div class="al-barre-titre">Export</div>')
     bouton_export("export_csv")
-    st.html(
+    html_fr(
         f'<div class="al-barre-note">{formater_nombre(len(SE))} sessions dans la sélection.</div>'
     )
-    st.html(
+    html_fr(
         '<div class="al-barre-titre">Source</div>'
         '<div class="al-barre-note">Google Merchandise Store, échantillon GA4 obfusqué '
         "publié par Google (BigQuery <i>ga4_obfuscated_sample_ecommerce</i>), "
@@ -540,7 +605,7 @@ def entete() -> None:
     with st.container(key="al_entete"):
         gauche, droite = st.columns([5, 1], vertical_alignment="top")
         with gauche:
-            st.html(
+            html_fr(
                 '<div class="al-surtitre">Tableau de bord d\'audience</div>'
                 '<div class="al-titre">Audience Lab</div>'
                 f'<p class="al-sous-titre">{esc(SOUS_TITRE)}</p>'
@@ -585,13 +650,18 @@ def series_quotidiennes(se: pd.DataFrame) -> dict[str, list[float] | None]:
     return resultat
 
 
+@st.cache_data(show_spinner=False, max_entries=64)
+def series_cachees(f: Filtres) -> dict[str, list[float] | None]:
+    return series_quotidiennes(tables(f)[1])
+
+
 def valeur_kpi(cle: str, v) -> str:
     if cle in ("sessions", "utilisateurs"):
         return formater_nombre(v or 0)
     if cle == "duree_moyenne_s":
         return formater_duree(v)
     if cle == "panier_moyen_usd":
-        return formater_nombre(v, 2, " USD")
+        return usd(v, 2)
     return pct(v)
 
 
@@ -600,49 +670,56 @@ def delta_kpi(cle: str, d: float | None) -> tuple[str | None, str, str]:
     if d is None:
         # Sans comparaison possible, la petite courbe prend la couleur d'accent.
         return None, "violet", "off"
-    unite = "pts" if cle in CLES_POINTS else "%"
+    unite = " pts" if cle in CLES_POINTS else " %"  # espace rendue insécable par formater_nombre
     if round(d, 1) == 0:
-        return f"0,0 {unite}", "off", "off"
+        return formater_nombre(0, 1, unite), "off", "off"
     signe = "+" if d > 0 else "-"
-    return f"{signe}{formater_nombre(abs(d), 1)} {unite}", "normal", "auto"
+    return f"{signe}{formater_nombre(abs(d), 1, unite)}", "normal", "auto"
 
 
 def bandeau_kpis() -> None:
-    actuel = calculer_kpis(SE)
-    precedent = calculer_kpis(SE_PRECEDENT)
-    deltas = variations(actuel, precedent)
-    series = series_quotidiennes(SE)
+    actuel = kpis_caches(FILTRES)
+    if MODE_COMPARAISON == "aucune":
+        deltas: dict = {}
+    else:
+        deltas = variations(kpis_caches(COMPAREE), kpis_caches(REFERENCE))
+    series = series_cachees(FILTRES)
 
     colonnes = st.columns(len(INDICATEURS), gap="small")
     for colonne, (cle, libelle, icone_kpi, aide) in zip(colonnes, INDICATEURS):
         texte, couleur, fleche = delta_kpi(cle, deltas.get(cle))
         with colonne:
             st.metric(
-                libelle, valeur_kpi(cle, actuel[cle]),
+                libelle, typo(valeur_kpi(cle, actuel[cle])),
                 delta=texte, delta_color=couleur, delta_arrow=fleche,
-                help=aide, icon=icone_kpi,
+                help=typo(aide), icon=icone_kpi,
                 chart_data=series.get(cle), chart_type="area",
                 height="stretch",
             )
+    html_fr(f'<div class="al-note-kpi">{icone("compare_arrows")}<span>{note_variations(deltas)}</span></div>')
 
-    # Base de comparaison des variations, énoncée sous le bandeau.
-    periode = f"du {date_courte(PRECEDENT.debut)} au {date_courte(PRECEDENT.fin)}"
-    if PRECEDENT.debut < REF["debut"]:
-        note = (
-            f"Variations calculées par rapport à la <b>période précédente de même durée</b> ({periode}) : "
-            "indisponibles ici, car elle précède les données. Choisissez par exemple décembre pour les voir."
-        )
-    elif all(v is None for v in deltas.values()):
-        note = (
-            f"Variations comparées à la <b>période précédente de même durée</b> ({periode}) : "
-            "indisponibles, aucune session comparable sur cette période."
-        )
-    else:
-        note = (
-            f"Variations : comparaison avec la <b>période précédente de même durée</b> ({periode}), "
-            "mêmes filtres. Courbes : évolution jour par jour (moyenne glissante sur 7 jours pour les taux)."
-        )
-    st.html(f'<div class="al-note-kpi">{icone("compare_arrows")}<span>{note}</span></div>')
+
+def note_variations(deltas: dict) -> str:
+    """Phrase sous le bandeau : base de comparaison des variations."""
+    def du_au(f: Filtres) -> str:
+        return f"du {date_courte(f.debut)} au {date_courte(f.fin)}"
+
+    courbes = " Courbes : évolution jour par jour (moyenne glissante sur 7 jours pour les taux)."
+    if MODE_COMPARAISON == "aucune":
+        return "Variations non calculées pour une période d'un seul jour." + courbes
+    if MODE_COMPARAISON == "precedente":
+        base = f"la <b>période précédente de même durée</b> ({du_au(REFERENCE)}), mêmes filtres"
+        if all(v is None for v in deltas.values()):
+            return f"Variations par rapport à {base} : indisponibles, aucune session comparable."
+        return f"Variations : comparaison avec {base}." + courbes
+    base = (
+        f"<b>seconde moitié</b> de la période ({du_au(COMPAREE)}) comparée à la "
+        f"<b>première moitié</b> ({du_au(REFERENCE)}), la période précédente n'étant pas "
+        "couverte par les données"
+    )
+    if all(v is None for v in deltas.values()):
+        return f"Variations ({base}) : indisponibles, une des moitiés est sans session."
+    return f"Variations : {base}." + courbes
 
 
 # ---------------------------------------------------------------------------
@@ -683,17 +760,17 @@ def graphique(
         fig, theme=None, width="stretch", config=config, key=f"graphique_{nom}",
         alt=titre,
     )
-    st.html(f'<div class="al-legende">{legende}</div>')
+    html_fr(f'<div class="al-legende">{legende}</div>')
 
 
 def section(titre: str, texte: str = "") -> None:
     sous = f'<div class="al-section-texte">{texte}</div>' if texte else ""
-    st.html(f'<div class="al-section"><div class="al-section-titre">{esc(titre)}</div>{sous}</div>')
+    html_fr(f'<div class="al-section"><div class="al-section-titre">{esc(titre)}</div>{sous}</div>')
 
 
 def etat_vide() -> None:
     """Message affiché à la place des graphiques quand les filtres ne laissent rien."""
-    st.html(
+    html_fr(
         '<div class="al-vide">'
         f'{icone("filter_alt_off")}'
         '<div class="al-vide-titre">Aucune donnée pour ces filtres</div>'
@@ -740,17 +817,17 @@ def onglet_synthese() -> None:
                 "</div>"
                 for c in constats_caches(FILTRES)
             )
-            st.html(f'<div class="al-grille-constats">{cartes}</div>')
+            html_fr(f'<div class="al-grille-constats">{cartes}</div>')
     with droite:
         kpis = calculer_kpis(SE)
         n_achats = int(SE["purchased"].sum()) if not VIDE else 0
         reperes = [
-            (formater_nombre(kpis["chiffre_affaires_usd"] or 0, 0, " USD"), "Chiffre d'affaires"),
+            (usd(kpis["chiffre_affaires_usd"] or 0, 0), "Chiffre d'affaires"),
             (formater_nombre(n_achats), "Sessions avec achat"),
             (formater_nombre(len(EV)), "Événements"),
             (formater_nombre(SE["country"].nunique() if not VIDE else 0), "Pays représentés"),
         ]
-        st.html(
+        html_fr(
             '<div class="al-reperes">'
             + "".join(
                 f'<div class="al-repere"><div class="al-repere-valeur">{v}</div>'
@@ -759,7 +836,7 @@ def onglet_synthese() -> None:
             )
             + "</div>"
         )
-        st.html(
+        html_fr(
             '<div class="al-carte al-apropos">'
             f'<h4>{icone("info")} À propos des données</h4>'
             "<dl>"
@@ -799,7 +876,7 @@ def onglet_temporalite() -> None:
             help="Une courbe par appareil (desktop, mobile, tablet).",
         )
     hebdo = GRANULARITES.get(choix or "Jour", "D") == "W"
-    fig = g.fig_evolution(SE, "W" if hebdo else "D", par_appareil, theme=THEME)
+    fig = figure("evolution", granularite="W" if hebdo else "D", par_appareil=par_appareil)
     pic, n_pic = periode_pic(SE, hebdo)
     quand = f"la semaine du {date_longue(pic)}" if hebdo else f"le {date_longue(pic)}"
     reperes = [lib for jour, lib, _ in g.EVENEMENTS if pd.Timestamp(DEBUT) <= jour <= pd.Timestamp(FIN)]
@@ -819,7 +896,7 @@ def onglet_temporalite() -> None:
     (jour, heure), n_creneau = creneaux.idxmax(), int(creneaux.max())
     ouvre = SE[(SE["weekday"] < 5) & SE["hour"].between(8, 17)]
     graphique(
-        g.fig_heatmap_heure_jour(SE, theme=THEME), "heatmap_heure_jour",
+        figure("heatmap"), "heatmap_heure_jour",
         f"Créneau le plus actif : <b>{JOURS_FR[int(jour)].lower()} à {int(heure)} h</b> "
         f"({formater_nombre(n_creneau)} sessions démarrées). Les jours ouvrés de 8 h à 18 h "
         f"concentrent {pct(len(ouvre) / len(SE))} des sessions. Plus la teinte est intense, "
@@ -842,8 +919,8 @@ def onglet_audience() -> None:
             required=True, format_func=METRIQUES_CATEGORIES.get, key="aud_metrique",
             persist_state="page",
         ) or "add_to_cart"
-    fig_categories = g.fig_categories(EV, metrique, theme=THEME)
-    fig_appareils = g.fig_parts_appareils(SE, theme=THEME)
+    fig_categories = figure("categories", metrique=metrique)
+    fig_appareils = figure("appareils")
     fig_appareils.update_layout(height=max(fig_appareils.layout.height, fig_categories.layout.height or 0))
     gauche, droite = st.columns([1, 1.35], gap="medium")
     with gauche:
@@ -880,7 +957,7 @@ def onglet_audience() -> None:
     premier = par_pays.index[0]
     with gauche:
         graphique(
-            g.fig_carte_pays(SE, theme=THEME), "carte_pays",
+            figure("carte"), "carte_pays",
             f"<b>{esc(REF['noms_pays'].get(premier, premier))}</b> concentre "
             f"{pct(par_pays.iloc[0] / len(SE))} des sessions, sur "
             f"{formater_nombre(len(par_pays))} pays représentés. L'échelle de couleur "
@@ -888,7 +965,7 @@ def onglet_audience() -> None:
         )
     with droite:
         graphique(
-            g.fig_top_pays(SE, theme=THEME), "top_pays",
+            figure("top_pays"), "top_pays",
             f"Les dix premiers pays totalisent {pct(par_pays.head(10).sum() / len(SE))} "
             "du trafic : l'audience reste très concentrée.",
         )
@@ -905,9 +982,13 @@ def onglet_engagement() -> None:
             "Métrique", list(METRIQUES_ENGAGEMENT), default="duration_s", required=True,
             format_func=METRIQUES_ENGAGEMENT.get, key="eng_metrique", persist_state="page",
         ) or "duration_s"
+        # Une bascule par métrique : activée par défaut pour les longues traînes
+        # (durée, valeur du panier), et le choix de l'utilisateur est conservé.
         log = st.toggle(
-            "Échelle logarithmique", key="eng_log", persist_state="page",
-            help="Déplie la longue traîne : utile pour la durée et la valeur du panier.",
+            "Distribution en échelle logarithmique", key=f"eng_log_{metrique}",
+            value=metrique in METRIQUES_LOG_PAR_DEFAUT, persist_state="page",
+            help="Déplie la longue traîne de la distribution (graphique de droite). "
+                 "Les boîtes restent en échelle linéaire, resserrée sur les moustaches.",
         )
     serie = SE[metrique].dropna()
     moyenne, mediane = float(serie.mean()), float(serie.median())
@@ -919,18 +1000,20 @@ def onglet_engagement() -> None:
     gauche, droite = st.columns(2, gap="medium")
     with gauche:
         graphique(
-            g.fig_engagement_boite(SE, metrique, log, theme=THEME), f"boite_{metrique}",
+            figure("boite", metrique=metrique), f"boite_{metrique}",
             f"Médianes : {mediane_par_appareil(SE, metrique)}. La boîte couvre la moitié "
             f"centrale des sessions.{asymetrie}",
             etiquette="Distribution par appareil", etroit=True,
         )
     with droite:
+        nuls = int((SE[metrique] <= 0).sum())
         conseil = (
-            " En échelle logarithmique, chaque graduation multiplie la valeur par 10."
+            " En échelle logarithmique, chaque graduation multiplie la valeur par 10"
+            + (f" ; les {formater_nombre(nuls)} sessions à valeur nulle sont exclues." if nuls else ".")
             if log else " Activez l'échelle logarithmique pour déplier la longue traîne."
         )
         graphique(
-            g.fig_engagement_densite(SE, metrique, log, theme=THEME), f"densite_{metrique}",
+            figure("densite", metrique=metrique, log=log), f"densite_{metrique}_{int(log)}",
             "Chaque appareil a une aire normalisée à 1 : on compare la forme des distributions, "
             f"pas les volumes.{conseil}",
             etiquette="Distribution par appareil", etroit=True,
@@ -962,7 +1045,7 @@ def onglet_conversion() -> None:
         texte = "Aucune session add_to_cart dans la sélection."
     with gauche:
         graphique(
-            g.fig_entonnoir(SE, EV, theme=THEME), "entonnoir",
+            figure("entonnoir"), "entonnoir",
             texte + " Barres empilées par appareil ; survolez un segment pour sa part.",
         )
     with droite:
@@ -983,13 +1066,14 @@ def onglet_conversion() -> None:
                 f'<div class="al-conv-detail">{formater_nombre(a)} sessions avec achat sur {formater_nombre(n)}</div>'
                 "</div>"
             )
-        st.html(f'<div class="al-conv">{"".join(cartes)}</div>')
-        meilleur = (stats["achats"] / stats["sessions"]).idxmax()
-        st.html(
-            '<div class="al-legende">Barres proportionnelles au meilleur taux '
-            f"(<b>{esc(meilleur)}</b>). Le taux global figure dans le bandeau "
-            f"«{NBSP}Taux de conversion{NBSP}».</div>"
-        )
+        html_fr(f'<div class="al-conv">{"".join(cartes)}</div>')
+        taux = stats["achats"] / stats["sessions"]
+        rappel = f"Le taux global figure dans le bandeau «{NBSP}Taux de conversion{NBSP}»."
+        if taux.max() > 0:
+            phrase = f"Barres proportionnelles au meilleur taux (<b>{esc(taux.idxmax())}</b>). {rappel}"
+        else:
+            phrase = f"Aucun achat dans la sélection : le taux est nul pour chaque appareil. {rappel}"
+        html_fr(f'<div class="al-legende">{phrase}</div>')
 
 
 def cellule(colonne: str, valeur) -> str:
@@ -999,6 +1083,8 @@ def cellule(colonne: str, valeur) -> str:
     if colonne in COLONNES_BOOLEENNES:
         return ('<td class="centre"><span class="al-oui" title="True">✓</span></td>' if valeur
                 else '<td class="centre"><span class="al-non" title="False">✗</span></td>')
+    if colonne in COLONNES_MONTANTS:
+        return f'<td class="num">{formater_nombre(float(valeur), 2)}</td>'
     if colonne in COLONNES_NUMERIQUES:
         x = float(valeur)
         return f'<td class="num">{formater_nombre(x, 0 if x.is_integer() else 2)}</td>'
@@ -1043,7 +1129,7 @@ def onglet_donnees() -> None:
         etat_vide()
         return
     st.html(tableau_html(SE))
-    st.html(
+    html_fr(
         '<div class="al-legende">Une ligne par session. Durée : temps entre le premier et le dernier '
         "événement ; valeur panier : somme des prix ajoutés au panier ; chiffre d'affaires : "
         "somme des prix achetés. ✓ : oui, ✗ : non. Aussi disponible depuis la barre latérale.</div>"
@@ -1079,7 +1165,7 @@ for onglet, nom in zip(st.tabs(ONGLETS, key="onglet", on_change="rerun"), ONGLET
 # 7. Pied de page
 # ---------------------------------------------------------------------------
 
-st.html(
+html_fr(
     '<div class="al-pied">'
     + '<span class="al-sep"> · </span>'.join(f"<span>{esc(p.strip())}</span>" for p in PIED.split("·"))
     + "</div>"

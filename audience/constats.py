@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 import pandas as pd
 
-from audience.kpis import formater_nombre
+from audience.kpis import formater_nombre, typo
 
 JOURS_FR = ("Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche")
 MOIS_FR = (
@@ -124,4 +124,5 @@ def generer_constats(events: pd.DataFrame, sessions: pd.DataFrame) -> list[Const
     entonnoir = _entonnoir(events, sessions)
     if entonnoir is not None:
         constats.append(entonnoir)
-    return constats
+    # Espaces insécables (« 39,9 % », « : 159 sessions », « 13 h ») : pas de coupure fautive.
+    return [Constat(typo(c.titre), typo(c.texte), c.icone) for c in constats]

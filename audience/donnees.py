@@ -68,3 +68,25 @@ def periode_precedente(f: Filtres) -> Filtres:
     duree = f.fin - f.debut
     fin = f.debut - timedelta(days=1)
     return replace(f, debut=fin - duree, fin=fin)
+
+
+def periode_de_reference(f: Filtres, debut_donnees: date) -> tuple[Filtres, Filtres, str]:
+    """Périodes comparées pour les variations du bandeau : (comparée, référence, mode).
+
+    - « precedente » : f entière comparée à la période précédente de même durée, quand
+      celle-ci est entièrement couverte par les données ;
+    - « moities » : sinon, seconde moitié de f comparée à sa première moitié (deux moitiés
+      de même longueur ; pour un nombre impair de jours, le jour du milieu est écarté) ;
+    - « aucune » : un seul jour sélectionné, pas de comparaison (comparée = référence = f).
+    Les autres critères (appareils, pays, catégories) sont conservés.
+    """
+    nb_jours = (f.fin - f.debut).days + 1
+    if nb_jours < 2:
+        return f, f, "aucune"
+    precedente = periode_precedente(f)
+    if precedente.debut >= debut_donnees:
+        return f, precedente, "precedente"
+    demi = nb_jours // 2
+    premiere = replace(f, fin=f.debut + timedelta(days=demi - 1))
+    seconde = replace(f, debut=f.fin - timedelta(days=demi - 1))
+    return seconde, premiere, "moities"

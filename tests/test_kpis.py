@@ -8,6 +8,7 @@ from audience.kpis import (
     calculer_kpis,
     formater_duree,
     formater_nombre,
+    typo,
     variations,
 )
 
@@ -93,7 +94,16 @@ def test_formater_duree():
 
 def test_formater_nombre():
     assert formater_nombre(42318) == f"42{FINE}318"
-    assert formater_nombre(63.2, 2, " $") == "63,20 $"
+    assert formater_nombre(63.2, 2, " $") == f"63,20{FINE}$"  # unité insécable
     assert formater_nombre(1234567.891, 1) == f"1{FINE}234{FINE}567,9"
     assert formater_nombre(0) == "0"
     assert formater_nombre(None) == "n.d."
+
+
+def test_typo_espaces_insecables():
+    nbsp = chr(0x00A0)
+    texte = typo("Mardi à 13 h : 159 sessions (0,9 %) ; « oui » ? 5 min 41 s, 12 USD, +1,2 pts")
+    assert f"13{nbsp}h" in texte and f"{nbsp}: 159" in texte and f"0,9{nbsp}%" in texte
+    assert f"{nbsp};" in texte and f"«{nbsp}oui{nbsp}»{nbsp}?" in texte
+    assert f"5{nbsp}min{nbsp}41{nbsp}s" in texte and f"12{nbsp}USD" in texte and f"1,2{nbsp}pts" in texte
+    assert "159 sessions" in texte  # pas d'unité : espace ordinaire conservée

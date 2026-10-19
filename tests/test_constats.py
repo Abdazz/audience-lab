@@ -1,10 +1,22 @@
 """Tests des constats automatiques (audience/constats.py)."""
 from __future__ import annotations
 
+import re
+
 import pandas as pd
 import pytest
 
 from audience.constats import Constat, generer_constats
+
+ESPACES = {chr(0x202F): " ", chr(0x00A0): " "}
+
+
+def _n(texte: str) -> str:
+    """Texte avec espaces insécables ramenées à des espaces simples (comparaisons lisibles)."""
+    for espace, simple in ESPACES.items():
+        texte = texte.replace(espace, simple)
+    return texte
+
 
 JOURS = ("Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche")
 
@@ -54,26 +66,26 @@ def test_constats_vide(jeu):
 
 def test_constats_pic_de_trafic(jeu):
     pic = generer_constats(*jeu)[0]
-    assert "2 décembre 2020" in pic.texte
-    assert "4 sessions" in pic.texte
+    assert "2 décembre 2020" in _n(pic.texte)
+    assert "4 sessions" in _n(pic.texte)
     assert "2,0" in pic.texte  # 4 sessions pour une moyenne de 2 par jour
 
 
 def test_constats_appareils(jeu):
-    texte = generer_constats(*jeu)[1].texte
+    texte = _n(generer_constats(*jeu)[1].texte)
     assert "mobile" in texte
     assert "50,0 %" in texte  # 3 sessions mobile sur 6
     assert "0,0 %" in texte  # aucun achat mobile
 
 
 def test_constats_jour_en_francais(jeu):
-    texte = generer_constats(*jeu)[2].texte
+    texte = _n(generer_constats(*jeu)[2].texte)
     assert any(j in texte for j in JOURS)
     assert "Mercredi" in texte and "14 h" in texte
 
 
 def test_constats_entonnoir_taux_conditionnels(jeu):
-    texte = generer_constats(*jeu)[3].texte
+    texte = _n(generer_constats(*jeu)[3].texte)
     # 5 sessions avec add_to_cart, 3 vont jusqu'à begin_checkout (60,0 %),
     # puis 1 sur 3 achète (33,3 %).
     assert "60,0 %" in texte and "33,3 %" in texte
@@ -90,3 +102,11 @@ def test_constats_entonnoir_absent_sans_add_to_cart(jeu):
 def test_constats_sans_cadratin(jeu):
     for c in generer_constats(*jeu):
         assert chr(0x2014) not in c.titre + c.texte + c.icone
+
+
+def test_constats_typographie_francaise(jeu):
+    """Pas d'espace sécable avant « % », « : » ou « ; », ni entre un nombre et « h »."""
+    for c in generer_constats(*jeu):
+        for motif in (" %", " :", " ;", " ?"):
+            assert motif not in c.texte, (motif, c.texte)
+        assert not re.search(r"\d h\b", c.texte)

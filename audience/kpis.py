@@ -2,10 +2,12 @@
 from __future__ import annotations
 
 import math
+import re
 
 import pandas as pd
 
 ESPACE_FINE = chr(0x202F)  # espace fine insécable (séparateur de milliers)
+ESPACE_INSECABLE = chr(0x00A0)  # espace insécable (ponctuation haute, unités)
 CLES_KPIS = (
     "sessions", "utilisateurs", "duree_moyenne_s", "panier_moyen_usd",
     "taux_conversion", "part_mobile", "chiffre_affaires_usd",
@@ -68,4 +70,25 @@ def formater_nombre(x, decimales: int = 0, suffixe: str = "") -> str:
         return "n.d."
     texte = f"{x:,.{decimales}f}"
     texte = texte.replace(",", ESPACE_FINE).replace(".", ",")
+    # Un suffixe « espace + unité » (" %", " USD") ne doit jamais passer seul à la ligne.
+    if suffixe.startswith(" "):
+        suffixe = ESPACE_FINE + suffixe[1:]
     return texte + suffixe
+
+
+# Typographie française : espace insécable avant la ponctuation haute et le
+# pourcentage, après « et avant », et entre un nombre et son unité.
+_AVANT_PONCTUATION = re.compile(r" (?=[:;?!%\u00bb])")
+_APRES_GUILLEMET = re.compile(r"(?<=\u00ab) ")
+_NOMBRE_UNITE = re.compile(r"(?<=\d) (?=(?:h|min|s|USD|pts)\b)")
+_MINUTES_SECONDES = re.compile(r"(?<=\bmin) (?=\d)")
+
+
+def typo(texte: str) -> str:
+    """Remplace les espaces sécables qui provoqueraient une coupure fautive en français.
+
+    « 39,9 %», « : 159 sessions », « 13 h », « 5 min 41 s » ne se coupent plus en fin de ligne.
+    """
+    for motif in (_AVANT_PONCTUATION, _APRES_GUILLEMET, _NOMBRE_UNITE, _MINUTES_SECONDES):
+        texte = motif.sub(ESPACE_INSECABLE, texte)
+    return texte
