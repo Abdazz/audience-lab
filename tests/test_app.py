@@ -44,7 +44,8 @@ def test_app_demarre():
     assert [t.label for t in at.tabs] == ONGLETS
     assert len(at.metric) >= 6
     assert [m.label for m in at.metric[:6]] == LIBELLES_KPI
-    assert at.session_state["theme"] == "sombre"
+    assert at.session_state["theme"] == "clair"  # thème clair par défaut
+    assert at.toggle(key="bascule_theme").value is False
 
 
 def test_app_kpis_periode_complete():
@@ -55,18 +56,31 @@ def test_app_kpis_periode_complete():
     assert "$" not in "".join(valeurs.values())
 
 
-def test_app_theme_clair():
+def test_app_theme_sombre():
+    """Le thème peut être fixé avant le premier rendu : la bascule le suit."""
     at = _app()
-    at.session_state["theme"] = "clair"
+    at.session_state["theme"] = "sombre"
     at.run()
     assert not at.exception
-    assert at.session_state["theme"] == "clair"
-    assert at.toggle(key="bascule_theme").value is False
+    assert at.session_state["theme"] == "sombre"
+    assert at.toggle(key="bascule_theme").value is True
 
 
 def test_app_bascule_theme():
+    """La bascule « Mode sombre » passe du thème clair au sombre, puis revient."""
     at = _app().run()
+    at.toggle(key="bascule_theme").set_value(True).run()
+    assert not at.exception
+    assert at.session_state["theme"] == "sombre"
     at.toggle(key="bascule_theme").set_value(False).run()
+    assert not at.exception
+    assert at.session_state["theme"] == "clair"
+
+
+def test_app_theme_inconnu_revient_au_clair():
+    at = _app()
+    at.session_state["theme"] = "inconnu"
+    at.run()
     assert not at.exception
     assert at.session_state["theme"] == "clair"
 

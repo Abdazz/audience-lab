@@ -530,7 +530,7 @@
 
   <h3>Choix de conception</h3>
   <div class="grille-2">
-    <div class="carte"><h4>Deux thèmes cohérents</h4><p>Un thème sombre par défaut, adapté à la projection, et un thème clair, au choix par une bascule. Le CSS et chaque figure Plotly (fond, texte, palette) suivent le thème&#8239;; les couleurs des appareils restent identiques d’un graphique à l’autre.</p></div>
+    <div class="carte"><h4>Deux thèmes cohérents</h4><p>Un thème clair par défaut et un thème sombre, adapté à la projection, au choix par une bascule. Le CSS et chaque figure Plotly (fond, texte, palette) suivent le thème&#8239;; les couleurs des appareils restent identiques d’un graphique à l’autre.</p></div>
     <div class="carte"><h4>Des variations honnêtes</h4><p>Chaque carte compare la sélection à la période précédente de même durée. Si celle-ci sort des données, ce qui est le cas de la vue par défaut, l’application compare la seconde moitié de la période à la première et l’annonce en clair&#8239;; un seul jour sélectionné n’affiche pas de variation.</p></div>
     <div class="carte"><h4>Lisible et robuste</h4><p>Typographie française (espaces insécables, virgule décimale), valeurs de données en anglais, légende chiffrée sous chaque graphique, message «&nbsp;Aucune donnée pour ces filtres&nbsp;» au lieu d’une erreur. Une page «&nbsp;Données&nbsp;» montre l’aperçu des sessions filtrées.</p></div>
     <div class="carte"><h4>Rapide en ligne</h4><p>Données en Parquet, chargement et filtrage mis en cache (<code>st.cache_data</code>), onglets calculés seulement à l’ouverture&nbsp;: de 0,1 à 0,4&nbsp;s par interaction en local. 95 tests automatisés couvrent données, indicateurs, graphiques et application.</p></div>
@@ -615,7 +615,7 @@
     <li><strong>La session, bon niveau d’analyse.</strong> Passer de 719&#8239;386 événements à 18&#8239;101 sessions a rendu calculables la durée, la valeur du panier et l’entonnoir, et a révélé que <code>ga_session_id</code> seul n’est pas un identifiant de session.</li>
     <li><strong>Des statistiques robustes à l’asymétrie.</strong> Médiane plutôt que moyenne pour la durée, échelle logarithmique, corrélation de Spearman et taux conditionnels pour l’entonnoir&nbsp;: les choix de représentation ont évité plusieurs conclusions trompeuses.</li>
     <li><strong>Un format adapté au déploiement.</strong> Le Parquet divise par neuf environ le volume (41,7&nbsp;Mo de CSV contre 4,8&nbsp;Mo) en conservant les types&#8239;; avec la mise en cache, l’application reste fluide sur Streamlit Community Cloud.</li>
-    <li><strong>Une application testée.</strong> 95 tests pytest vérifient les données traitées, les indicateurs, les constats, les graphiques (y compris les filtres vides et le suivi du thème) et l’application elle-même.</li>
+    <li><strong>Une application testée.</strong> 98 tests pytest vérifient les données traitées, les indicateurs, les constats, les graphiques (y compris les filtres vides et le suivi du thème) et l’application elle-même.</li>
   </ul>
 
   <h3>Limites des données</h3>

@@ -6,7 +6,7 @@ fichier assemble l'interface, de haut en bas :
 
 1. configuration de la page et état de session ;
 2. chargement des données, mis en cache ;
-3. thème (bascule sombre / clair) et feuille de style ;
+3. thème (clair par défaut, bascule vers le sombre) et feuille de style ;
 4. barre latérale : filtres, réinitialisation, export CSV, source ;
 5. en-tête et bandeau des six indicateurs clés ;
 6. six onglets : Synthèse, Temporalité, Audience, Engagement, Conversion, Données ;
@@ -472,9 +472,9 @@ def libelle_pays(code: str) -> str:
 # ---------------------------------------------------------------------------
 
 ss = st.session_state
-ss.setdefault("theme", "sombre")
+ss.setdefault("theme", "clair")  # thème clair par défaut
 if ss["theme"] not in THEMES:
-    ss["theme"] = "sombre"
+    ss["theme"] = "clair"
 # La bascule suit toujours ss["theme"] (même si celui-ci est fixé ailleurs, par exemple
 # par les tests) ; on la synchronise avant sa création.
 ss["bascule_theme"] = ss["theme"] == "sombre"
@@ -617,7 +617,7 @@ def entete() -> None:
         with droite:
             st.toggle(
                 "Mode sombre", key="bascule_theme", on_change=basculer_theme,
-                help="Bascule entre le thème sombre (Nuit analytique) et le thème clair.",
+                help="Passe du thème clair (par défaut) au thème sombre (Nuit analytique), adapté à la projection.",
             )
 
 

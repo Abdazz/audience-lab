@@ -9,7 +9,7 @@ from audience.theme import THEMES, Theme, appliquer_theme, css, obtenir_theme
 def test_obtenir_theme_defaut():
     assert obtenir_theme("sombre").nom == "sombre"
     assert obtenir_theme("clair").nom == "clair"
-    assert obtenir_theme("inconnu").nom == "sombre"
+    assert obtenir_theme("inconnu").nom == "clair"  # thème par défaut
     assert set(THEMES) == {"sombre", "clair"}
     assert all(isinstance(t, Theme) for t in THEMES.values())
 
@@ -36,6 +36,8 @@ def test_css_contient_couleurs():
         assert "Inter" in feuille
         assert '[data-testid="stMetric"]' in feuille
         assert ".al-carte" in feuille
+        # Base native claire : les info-bulles natives doivent suivre le thème actif.
+        assert '[data-testid="stTooltipContent"]' in feuille
 
 
 def test_appliquer_theme():

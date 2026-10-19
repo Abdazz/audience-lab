@@ -1,7 +1,7 @@
 """Thèmes visuels d'Audience Lab : palettes, feuille de style Streamlit, habillage Plotly.
 
-Deux thèmes : « sombre » (Nuit analytique, thème par défaut) et « clair »
-(professionnel). Chaque thème fournit :
+Deux thèmes : « clair » (professionnel, thème par défaut) et « sombre »
+(Nuit analytique, adapté à la projection). Chaque thème fournit :
 
 - une palette (`Theme`) partagée par le CSS et les graphiques ;
 - `css(theme)` : une balise <style> à injecter avec
@@ -96,8 +96,8 @@ THEMES: dict[str, Theme] = {"sombre": SOMBRE, "clair": CLAIR}
 
 
 def obtenir_theme(nom: str) -> Theme:
-    """Thème demandé ; le thème sombre pour un nom inconnu."""
-    return THEMES.get(nom, SOMBRE)
+    """Thème demandé ; le thème clair (thème par défaut) pour un nom inconnu."""
+    return THEMES.get(nom, CLAIR)
 
 
 def rgba(hexa: str, alpha: float) -> str:
@@ -405,6 +405,13 @@ html, body, .stApp, [data-testid="stAppViewContainer"] {
 [data-baseweb="tooltip"], [data-baseweb="tooltip"] div {
   background-color: var(--al-surface) !important; color: var(--al-texte) !important;
 }
+/* Info-bulles natives (aide « ? ») : la base native est claire, le thème sombre les recolore */
+[data-testid="stTooltipContent"] {
+  background-color: var(--al-surface) !important; color: var(--al-texte) !important;
+  border: 1px solid var(--al-bordure) !important; box-shadow: var(--al-ombre) !important;
+}
+[data-testid="stTooltipContent"] p, [data-testid="stTooltipContent"] li,
+[data-testid="stTooltipContent"] [data-testid="stMarkdownContainer"] { color: var(--al-texte) !important; }
 
 /* Interrupteurs, cases, radios, curseurs */
 .stApp [role="switch"], .stApp [data-baseweb="checkbox"] span { border-color: var(--al-bordure); }
