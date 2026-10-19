@@ -100,6 +100,18 @@ def test_app_nombre_de_pays_hors_not_set():
     assert "108 pays" in legendes and "109" not in legendes
 
 
+def test_app_limite_de_collecte_signalee():
+    """Le défaut de collecte du début de période est signalé (barre latérale et carte)."""
+    at = _app().run()
+    espaces = {ord(FINE): " ", ord(NBSP): " "}
+    apropos = " ".join(_html(at, "al-carte al-apropos")).translate(espaces)
+    assert "avant le 16 novembre 2020, seuls les achats sont enregistrés" in apropos
+    assert "en continu qu'à partir du 25 novembre" in apropos
+    assert "variations affichées par défaut" in apropos
+    barre = " ".join(_html(at, "al-barre-note")).translate(espaces)
+    assert "avant le 16 novembre 2020, seuls les achats sont enregistrés" in barre
+
+
 def test_app_filtres_vides():
     at = _filtres_vides(_app().run())
     assert not at.exception

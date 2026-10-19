@@ -579,7 +579,8 @@ with st.sidebar:
         '<div class="al-barre-note">Google Merchandise Store, échantillon GA4 obfusqué '
         "publié par Google (BigQuery <i>ga4_obfuscated_sample_ecommerce</i>), "
         "diffusé sur Kaggle et Observable. Événements add_to_cart, begin_checkout "
-        "et purchase du <b>1er novembre 2020</b> au <b>31 janvier 2021</b>.</div>"
+        "et purchase du <b>1er novembre 2020</b> au <b>31 janvier 2021</b> ; "
+        "avant le 16 novembre 2020, seuls les achats sont enregistrés.</div>"
     )
 
 
@@ -863,6 +864,11 @@ def onglet_synthese() -> None:
             "<li>Échantillon obfusqué par Google : volumes et montants indicatifs, "
             "pas l'activité réelle de la boutique.</li>"
             "<li>Seuls trois types d'événements : pas de pages vues ni de source de trafic.</li>"
+            "<li>Collecte incomplète en début de période : avant le 16 novembre 2020, seuls "
+            "les achats sont enregistrés, et les ajouts au panier ne sont collectés en continu "
+            "qu'à partir du 25 novembre. La conversion du début de novembre est donc gonflée, "
+            "et les variations affichées par défaut (seconde moitié de la période comparée "
+            "à la première) en reflètent en partie l'effet.</li>"
             "</ul></dd>"
             "</dl></div>"
         )
@@ -909,7 +915,7 @@ def onglet_temporalite() -> None:
         f"({formater_nombre(n_creneau)} sessions démarrées). Les jours ouvrés de 8 h à 18 h "
         f"concentrent {pct(len(ouvre) / len(SE))} des sessions. Plus la teinte est intense, "
         "plus le trafic est fort ; heures selon un fuseau non documenté par la source.",
-        etiquette="Heatmap heure x jour",
+        etiquette="Heatmap heure × jour",
     )
 
 
