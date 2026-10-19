@@ -184,7 +184,7 @@
   </div>
 
   <h3>Outils</h3>
-  <p>Python 3.12&#8239;; pandas 3.0.6 et pyarrow 26.0.0 pour la préparation&#8239;; seaborn 0.13.2 et matplotlib 3.11.2 pour les figures statiques&#8239;; Plotly 7.1.0 et Streamlit 1.66.0 pour l’application&#8239;; pycountry pour les noms de pays&#8239;; pytest pour les tests automatisés (95 tests). Les versions sont figées dans <code>requirements.txt</code>.</p>
+  <p>Python 3.12&#8239;; pandas 3.0.6 et pyarrow 26.0.0 pour la préparation&#8239;; seaborn 0.13.2 et matplotlib 3.11.2 pour les figures statiques&#8239;; Plotly 7.1.0 et Streamlit 1.66.0 pour l’application&#8239;; pycountry pour les noms de pays&#8239;; pytest pour les tests automatisés (98 tests). Les versions sont figées dans <code>requirements.txt</code>.</p>
 
   <div class="encadre info">
     <div class="titre-encadre">Organisation du rapport</div>
@@ -533,7 +533,7 @@
     <div class="carte"><h4>Deux thèmes cohérents</h4><p>Un thème clair par défaut et un thème sombre, adapté à la projection, au choix par une bascule. Le CSS et chaque figure Plotly (fond, texte, palette) suivent le thème&#8239;; les couleurs des appareils restent identiques d’un graphique à l’autre.</p></div>
     <div class="carte"><h4>Des variations honnêtes</h4><p>Chaque carte compare la sélection à la période précédente de même durée. Si celle-ci sort des données, ce qui est le cas de la vue par défaut, l’application compare la seconde moitié de la période à la première et l’annonce en clair&#8239;; un seul jour sélectionné n’affiche pas de variation.</p></div>
     <div class="carte"><h4>Lisible et robuste</h4><p>Typographie française (espaces insécables, virgule décimale), valeurs de données en anglais, légende chiffrée sous chaque graphique, message «&nbsp;Aucune donnée pour ces filtres&nbsp;» au lieu d’une erreur. Une page «&nbsp;Données&nbsp;» montre l’aperçu des sessions filtrées.</p></div>
-    <div class="carte"><h4>Rapide en ligne</h4><p>Données en Parquet, chargement et filtrage mis en cache (<code>st.cache_data</code>), onglets calculés seulement à l’ouverture&nbsp;: de 0,1 à 0,4&nbsp;s par interaction en local. 95 tests automatisés couvrent données, indicateurs, graphiques et application.</p></div>
+    <div class="carte"><h4>Rapide en ligne</h4><p>Données en Parquet, chargement et filtrage mis en cache (<code>st.cache_data</code>), onglets calculés seulement à l’ouverture&nbsp;: de 0,1 à 0,4&nbsp;s par interaction en local. 98 tests automatisés couvrent données, indicateurs, graphiques et application.</p></div>
   </div>
 </section>
 
@@ -684,7 +684,7 @@
 ├── soutenance/                    <span class="com"># support de l'oral et déroulé de la démonstration</span>
 │   └── presentation.html, presentation.pdf, deroule_demo.md
 ├── scripts/                       <span class="com"># téléchargement des données, génération du PDF</span>
-├── tests/                         <span class="com"># 95 tests pytest</span>
+├── tests/                         <span class="com"># 98 tests pytest</span>
 ├── docs/captures/                 <span class="com"># captures d'écran de l'application</span>
 ├── .streamlit/config.toml
 ├── README.md                      <span class="com"># présentation, captures, liens, exécution</span>
