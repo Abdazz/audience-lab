@@ -76,7 +76,7 @@ Un seul fichier `app.py` propre et commenté (des modules utilitaires dans un do
 **Thèmes** : deux thèmes validés par l'étudiant à partir des maquettes :
 - Sombre « Nuit analytique » : fond `#0B1020`, surfaces `#141B35`, bordures `#232D55`, texte `#E6E9F5`, accents en dégradé violet `#8B5CF6` vers cyan `#22D3EE`, positif `#34D399`, négatif `#F87171`.
 - Clair « professionnel » : fond `#F5F7FB`, cartes blanches à ombre douce, texte `#0F172A`, accent indigo `#4F46E5`, secondaire `#0EA5E9`, positif `#059669`, négatif `#DC2626`.
-Une bascule visible (dans l'en-tête ou la barre latérale) passe de l'un à l'autre ; le CSS personnalisé ET les graphiques Plotly (template, couleurs, fond) suivent le thème. Le mécanisme exact (bascule maison avec `st.session_state` + CSS injecté + template Plotly, ou thèmes natifs Streamlit `[theme.light]` / `[theme.dark]`) est laissé au constructeur, à condition que le rendu des deux thèmes soit soigné et cohérent.
+Une bascule visible (dans l'en-tête ou la barre latérale) passe de l'un à l'autre ; le CSS personnalisé ET les graphiques Plotly (template, couleurs, fond) suivent le thème. Le mécanisme exact (bascule maison avec `st.session_state` + CSS injecté + template Plotly, ou thèmes natifs Streamlit `[theme.light]` / `[theme.dark]`) est laissé au constructeur, à condition que le rendu des deux thèmes soit soigné et cohérent. **Thème par défaut : clair** (décision de l'étudiant, 19 octobre 2026).
 
 **Structure** (option « une page, des onglets » validée) :
 - En-tête : nom de l'application (« Audience Lab » proposé), phrase de contexte (boutique, période), bascule de thème.

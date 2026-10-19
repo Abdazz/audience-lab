@@ -17,7 +17,7 @@
 - API du cours visibles : `px.line`, `px.bar`, `px.pie`, `px.box`, `px.histogram`, `px.imshow` ou `px.density_heatmap`, `px.choropleth`, `px.funnel`, `sns.boxplot`, `sns.histplot(kde=True)`, `sns.heatmap(annot=True, cmap=...)`, `st.sidebar`, `st.metric`, `st.plotly_chart`, `st.download_button`.
 - Thème sombre : fond `#0B1020`, surface `#141B35`, bordure `#232D55`, texte `#E6E9F5`, texte secondaire `#94A3B8`, accents `#8B5CF6` et `#22D3EE`, rose `#F472B6`, positif `#34D399`, négatif `#F87171`.
 - Thème clair : fond `#F5F7FB`, surface `#FFFFFF`, bordure `#E5E9F2`, texte `#0F172A`, texte secondaire `#64748B`, accent `#4F46E5`, secondaire `#0EA5E9`, ambre `#F59E0B`, positif `#059669`, négatif `#DC2626`.
-- Thème par défaut : sombre.
+- Thème par défaut : clair (décision de l'étudiant du 19 octobre 2026, le thème sombre reste accessible par la bascule).
 - Auteur : Abdoul-Aziz ZOROM, Master 1 IA, Université Aube-Nouvelle ; enseignant : Dr. Zakaria Sawadogo ; date : 19 octobre 2026.
 - Dépôt : `https://github.com/Abdazz/audience-lab`. Toute action publique (push, déploiement) seulement avec l'accord explicite de l'étudiant.
 - `requirements.txt` avec versions exactes (celles installées) ; `.venv/` non versionné.
@@ -170,7 +170,7 @@
 
 **Interfaces :**
 - Consomme : tout `audience/`.
-- Clés `st.session_state` (utilisées par les tests) : `"theme"` (`"sombre"` par défaut), widgets avec `key=` : `"f_periode"`, `"f_appareils"`, `"f_pays"`, `"f_categories"`, `"granularite"`.
+- Clés `st.session_state` (utilisées par les tests) : `"theme"` (`"clair"` par défaut), widgets avec `key=` : `"f_periode"`, `"f_appareils"`, `"f_pays"`, `"f_categories"`, `"granularite"`.
 
 - [ ] **Étape 1 : tests** avec `streamlit.testing.v1.AppTest.from_file("app.py", default_timeout=60)` :
   - `test_app_demarre` : `at.run()` sans exception ; 6 onglets ; au moins 6 `metric`.
