@@ -1,0 +1,8 @@
+pandas==3.0.6
+numpy==2.5.4
+pyarrow==26.0.0
+seaborn==0.13.2
+matplotlib==3.11.2
+plotly==7.1.0
+streamlit==1.66.0
+pycountry==26.2.16
