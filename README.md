@@ -159,6 +159,8 @@ Chaque exigence du sujet (`projet.pdf`) et l'endroit précis où la vérifier.
 ```
 audience-lab/
 ├── app.py                         # point d'entrée Streamlit (filtres, KPI, onglets)
+├── lancer.bat                     # lancement en un double-clic sous Windows
+├── lancer.sh                      # lancement en une commande sous Linux / macOS
 ├── audience/                      # code de l'application
 │   ├── donnees.py                 #   chargement, filtres, période de référence
 │   ├── kpis.py                    #   indicateurs et mise en forme française
@@ -187,6 +189,19 @@ audience-lab/
 ```
 
 ## Exécution locale
+
+### Lancement en une commande (recommandé)
+
+Depuis le dossier du projet (archive décompressée ou clone Git) :
+
+| Système | Commande |
+|---|---|
+| Windows | double-cliquer sur `lancer.bat` |
+| Linux / macOS | `./lancer.sh` |
+
+Au premier lancement, le script crée l'environnement virtuel `.venv` et installe les dépendances (quelques minutes, connexion Internet requise), puis ouvre l'application dans le navigateur (http://localhost:8501). Les lancements suivants sont immédiats. Les dépendances exigent Python 3.12 ou plus récent : si la machine n'en dispose pas, le script obtient automatiquement Python 3.12 avec [uv](https://docs.astral.sh/uv/), sans droits administrateur.
+
+### Installation manuelle
 
 Prérequis : Python 3.12 et Git. Les données brutes et traitées sont versionnées : l'application démarre sans étape préalable.
 
