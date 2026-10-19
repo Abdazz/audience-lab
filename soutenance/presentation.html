@@ -128,7 +128,7 @@ code, .code {
 
 /* 1. Titre */
 .titre { padding-top: 0; }
-.titre .gauche { position: absolute; left: 72px; top: 58px; width: 600px; }
+.titre .gauche { position: absolute; left: 72px; top: 58px; width: 624px; }
 .logo {
   width: 64px; height: 64px; border-radius: 18px; background: var(--degrade);
   display: grid; place-items: center; box-shadow: 0 16px 40px rgba(139, 92, 246, 0.35);
@@ -141,6 +141,7 @@ code, .code {
 .titre .trait { margin-top: 22px; width: 132px; height: 6px; border-radius: 3px; background: var(--degrade); }
 .titre .accroche { margin-top: 26px; font-size: 25px; line-height: 1.4; color: var(--texte); font-weight: 500; }
 .titre .accroche span { color: var(--texte-2); font-weight: 400; }
+.accroche .nombre-texte { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .titre .meta { margin-top: 30px; display: grid; gap: 6px; font-size: 17px; color: var(--texte-2); }
 .titre .meta strong { color: var(--texte); font-size: 21px; font-weight: 700; }
 .titre .ecran {
@@ -307,7 +308,7 @@ code, .code {
     </div>
     <h1>Audience <span class="lab">Lab</span></h1>
     <div class="trait"></div>
-    <p class="accroche">Qui visite la Google Merchandise Store, quand, sur quel appareil, et où perd-elle ses acheteurs&#8239;? <span>Tableau de bord Streamlit sur 18&#8239;101 sessions GA4.</span></p>
+    <p class="accroche">Qui visite la Google Merchandise Store, quand, sur quel appareil, et où perd-elle ses acheteurs&#8239;? <span>Tableau de bord Streamlit sur <span class="nombre-texte">18&#8239;101</span> sessions GA4.</span></p>
     <div class="meta">
       <strong>Abdoul-Aziz ZOROM</strong>
       <span>Master 1 Intelligence Artificielle · Université Aube-Nouvelle</span>
@@ -415,7 +416,7 @@ code, .code {
   <div class="controles">
     <span><b>Clé de session</b>&nbsp;: <code>user_id</code> + <code>ga_session_id</code></span>
     <span><b>Parquet</b>&nbsp;: 41,7&nbsp;Mo de CSV → 4,8&nbsp;Mo</span>
-    <span><b>Contrôles</b>&nbsp;: cohérence sessions et événements, 98 tests</span>
+    <span><b>Contrôles</b>&nbsp;: cohérence sessions et événements, 99 tests</span>
   </div>
   <div class="pied"><span class="marque"><i class="pastille"></i>Audience Lab · Soutenance · notebook 01_preparation_donnees.ipynb</span><span class="page"><b>04</b> / 10</span></div>
 </section>
@@ -448,7 +449,7 @@ code, .code {
     <img src="../docs/captures/temporalite.png" alt="Évolution du trafic par jour" style="width:1502px; left:-319px; top:-357px;">
   </div>
   <div class="trio">
-    <div class="carte mini"><div class="nombre degrade">527</div><div class="legende">sessions le <b style="color:#E6E9F5">8 décembre 2020</b>, record&nbsp;: 2,7&nbsp;x la moyenne journalière</div></div>
+    <div class="carte mini"><div class="nombre degrade">527</div><div class="legende">sessions le <b style="color:#E6E9F5">8 décembre 2020</b>, record&nbsp;: 2,7&nbsp;&times; la moyenne journalière</div></div>
     <div class="carte mini"><div class="nombre degrade">53,8&#8239;%</div><div class="legende">des sessions entre le 23 novembre et le 18 décembre, en 26 jours</div></div>
     <div class="carte mini"><div class="nombre degrade">159</div><div class="legende">sessions le mardi à 13&nbsp;h, créneau le plus actif&#8239;; week-end&nbsp;: 20,0&#8239;%</div></div>
   </div>
@@ -500,7 +501,7 @@ code, .code {
       <ol class="parcours">
         <li><span><b>Accueil</b>&nbsp;: bandeau des six indicateurs et constats de l'onglet Synthèse</span></li>
         <li><span><b>Période janvier 2021</b>&nbsp;: variations face à décembre</span></li>
-        <li><span><b>Temporalité</b>&nbsp;: pic du 8 décembre et heatmap heure x jour</span></li>
+        <li><span><b>Temporalité</b>&nbsp;: pic du 8 décembre et heatmap heure &times; jour</span></li>
         <li><span><b>Audience et Engagement</b>&nbsp;: filtre mobile, pays, catégories</span></li>
         <li><span><b>Conversion</b>&nbsp;: l'entonnoir et sa plus forte perte</span></li>
         <li><span><b>Données</b>&nbsp;: export CSV, puis bascule vers le thème sombre</span></li>
@@ -536,14 +537,14 @@ code, .code {
       <div class="rang degrade">Priorité 3</div>
       <h3>Agir en semaine, mobile à parité</h3>
       <p>Mardi et mercredi en tête&#8239;; tester chaque évolution sur les deux supports.</p>
-      <div class="appui nombre degrade">x&nbsp;1,9 mardi / dimanche</div>
+      <div class="appui nombre degrade">&times;&nbsp;1,9 mardi / dimanche</div>
     </div>
   </div>
   <div class="bas">
     <div class="carte">
       <h4 style="color:#FBBF24">Limites assumées</h4>
       <ul>
-        <li>Collecte incomplète&nbsp;: avant le 16 novembre, seuls les achats&#8239;; <code>begin_checkout</code> dès le 23 novembre.</li>
+        <li>Collecte incomplète&nbsp;: avant le 16 novembre, seuls les achats&#8239;; trois événements collectés en continu dès le 25 novembre.</li>
         <li>Fuseau horaire non documenté, échantillon obfusqué par Google.</li>
       </ul>
     </div>
@@ -551,7 +552,7 @@ code, .code {
       <h4 style="color:#22D3EE">Perspectives</h4>
       <ul>
         <li>Cohortes et valeur vie client avec <code>users.csv</code>.</li>
-        <li>Raccourci «&nbsp;à partir du 23 novembre&nbsp;»&#8239;; sources de trafic et pages vues.</li>
+        <li>Raccourci «&nbsp;à partir du 25 novembre&nbsp;»&#8239;; sources de trafic et pages vues.</li>
       </ul>
     </div>
   </div>

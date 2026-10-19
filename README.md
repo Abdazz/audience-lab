@@ -10,7 +10,7 @@
 ![Streamlit 1.66.0](https://img.shields.io/badge/Streamlit-1.66.0-FF4B4B?logo=streamlit&logoColor=white)
 ![Plotly 7.1.0](https://img.shields.io/badge/Plotly%20Express-7.1.0-3F4F75?logo=plotly&logoColor=white)
 ![pandas 3.0.6](https://img.shields.io/badge/pandas-3.0.6-150458?logo=pandas&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-95%20r%C3%A9ussis-34D399)
+![Tests](https://img.shields.io/badge/tests-99%20r%C3%A9ussis-34D399)
 
 ### [Ouvrir l'application en ligne : audience-lab.streamlit.app](https://audience-lab.streamlit.app)
 
@@ -93,7 +93,7 @@ Le jeu respecte les critères du sujet : une variable temporelle (horodatage à
 - agrégation en 18 101 sessions (clé `user_id` + `ga_session_id`), 14 701 utilisateurs, 108 pays plus `(not set)` ;
 - valeurs aberrantes repérées par la règle IQR, **signalées et conservées** (elles portent 42,4 % du chiffre d'affaires).
 
-**Limite de collecte à connaître :** avant le 16 novembre 2020, seuls les achats sont enregistrés ; begin_checkout n'apparaît que le 23 novembre. Le rapport (section 8) montre que les taux conditionnels de l'entonnoir restent stables si l'on part du 23 novembre.
+**Limite de collecte à connaître :** avant le 16 novembre 2020, seuls les achats sont enregistrés ; begin_checkout n'apparaît que le 23 novembre, et les ajouts au panier ne sont collectés en continu qu'à partir du 25 novembre. La conversion globale (24,6 %) est donc nettement surestimée : elle vaut 20,3 % à partir du 25 novembre. Le rapport (section 8) montre que les taux conditionnels de l'entonnoir restent stables sur cette période (36,3 % puis 47,2 %, contre 35,0 % et 47,1 %).
 
 ## Fonctionnalités de l'application
 
@@ -103,13 +103,13 @@ Le jeu respecte les critères du sujet : une variable temporelle (horodatage à
 - **Graphiques Plotly Express** (`st.plotly_chart`) : `px.line`, `px.imshow`, `px.pie`, `px.bar`, `px.choropleth`, `px.box`, `px.histogram`, `px.funnel`, avec survol en valeurs réelles.
 - **Export CSV** (`st.download_button`) des sessions filtrées, en UTF-8 lisible par Excel, depuis la barre latérale et l'onglet Données.
 - **Deux thèmes** : thème clair par défaut, thème sombre (« Nuit analytique », pensé pour la projection) via la bascule de thème de l'en-tête ; le CSS et chaque figure suivent le thème.
-- **Robustesse** : message « Aucune donnée pour ces filtres » au lieu d'une erreur, données en Parquet et mises en cache (`st.cache_data`), 95 tests automatisés.
+- **Robustesse** : message « Aucune donnée pour ces filtres » au lieu d'une erreur, données en Parquet et mises en cache (`st.cache_data`), 99 tests automatisés.
 
 <sub>Captures des onglets en thème sombre.</sub>
 
 <table>
   <tr>
-    <td width="50%"><img src="docs/captures/temporalite.png" alt="Onglet Temporalité : courbe des sessions par jour avec repères Black Friday, Cyber Monday et Noël"><br><sub><b>Temporalité</b> : <code>px.line</code> par jour ou par semaine, puis heatmap heure x jour (<code>px.imshow</code>)</sub></td>
+    <td width="50%"><img src="docs/captures/temporalite.png" alt="Onglet Temporalité : courbe des sessions par jour avec repères Black Friday, Cyber Monday et Noël"><br><sub><b>Temporalité</b> : <code>px.line</code> par jour ou par semaine, puis heatmap heure × jour (<code>px.imshow</code>)</sub></td>
     <td width="50%"><img src="docs/captures/audience.png" alt="Onglet Audience : anneau des appareils et barres des catégories"><br><sub><b>Audience</b> : anneau des appareils (<code>px.pie</code>), catégories (<code>px.bar</code>), carte des pays (<code>px.choropleth</code>)</sub></td>
   </tr>
   <tr>
@@ -144,13 +144,13 @@ Chaque exigence du sujet (`projet.pdf`) et l'endroit précis où la vérifier.
 | **2.3.1** Évolution temporelle du trafic avec filtres interactifs | Onglet **Temporalité**, `px.line` (`fig_evolution`), granularité jour ou semaine, détail par appareil, filtres de la barre latérale ; notebook, section 10.1 ; rapport, section 5.1 |
 | **2.3.2** Comparaison catégorielle (barres ou camembert) | Onglet **Audience** : `px.pie` (`fig_parts_appareils`), `px.bar` (`fig_categories`, `fig_top_pays`), `px.choropleth` ; notebook, section 10.2 (`sns.barplot`) ; rapport, section 5.2 |
 | **2.3.3** Distribution de l'engagement selon l'appareil (boxplot ou densité) | Onglet **Engagement** : `px.box` (`fig_engagement_boite`) et `px.histogram` (`fig_engagement_densite`) ; notebook, section 10.3 (`sns.boxplot`, `sns.histplot(kde=True)`) ; rapport, section 5.3 |
-| **2.3.4** Heatmap heures de pointe x jours de la semaine | Onglet **Temporalité**, `px.imshow` (`fig_heatmap_heure_jour`) ; notebook, section 10.4 (`sns.heatmap(annot=True, cmap="Blues")`) ; rapport, section 5.4 |
+| **2.3.4** Heatmap heures de pointe × jours de la semaine | Onglet **Temporalité**, `px.imshow` (`fig_heatmap_heure_jour`) ; notebook, section 10.4 (`sns.heatmap(annot=True, cmap="Blues")`) ; rapport, section 5.4 |
 | **2.4** Application Streamlit `app.py` intégrant les analyses | [`app.py`](app.py), en ligne sur [audience-lab.streamlit.app](https://audience-lab.streamlit.app) ; rapport, section 6 |
 | **2.4** Panneau latéral `st.sidebar` (période, catégorie, appareil) | `app.py`, section 4 : période, appareils, pays, catégories de produits, réinitialisation |
 | **2.4** Métriques clés `st.metric` | `app.py`, section 5 (`bandeau_kpis`) : six cartes avec variation et courbe |
 | **2.4** Graphiques Plotly Express `st.plotly_chart` | `app.py`, fonction `graphique` (section « Éléments communs des onglets ») et section 6 (onglets) |
 | **2.4** Export CSV des données filtrées `st.download_button` | `app.py`, section 4 (`bouton_export`) : barre latérale et onglet **Données** |
-| **Livrable 1** Code source propre et commenté, notebook `.ipynb` | [`app.py`](app.py), package [`audience/`](audience/), [`notebooks/01_preparation_donnees.ipynb`](notebooks/01_preparation_donnees.ipynb) (exécuté, sorties conservées), [`tests/`](tests/) (95 tests) |
+| **Livrable 1** Code source propre et commenté, notebook `.ipynb` | [`app.py`](app.py), package [`audience/`](audience/), [`notebooks/01_preparation_donnees.ipynb`](notebooks/01_preparation_donnees.ipynb) (exécuté, sorties conservées), [`tests/`](tests/) (99 tests) |
 | **Livrable 2** Rapport d'analyse (données, nettoyage, interprétation, conclusions) | [`rapport/rapport_analyse.pdf`](rapport/rapport_analyse.pdf) (19 pages ; source HTML et CSS dans `rapport/`) |
 | **Livrable 3** Démonstration orale du tableau de bord | [Application en ligne](https://audience-lab.streamlit.app), [`soutenance/presentation.pdf`](soutenance/presentation.pdf), [`soutenance/deroule_demo.md`](soutenance/deroule_demo.md) |
 
@@ -176,7 +176,7 @@ audience-lab/
 │   ├── telecharger_donnees.py     # téléchargement contrôlé des données brutes
 │   ├── generer_pdf.sh             # impression HTML vers PDF (Chromium sans interface)
 │   └── numeroter_sommaire.py      # numéros de page du sommaire du rapport
-├── tests/                         # 95 tests pytest
+├── tests/                         # 99 tests pytest
 ├── docs/
 │   ├── captures/                  # captures d'écran de l'application
 │   ├── specs/                     # document de conception

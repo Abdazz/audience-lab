@@ -87,7 +87,7 @@
     <li class="n2"><a href="#s5-1"><span class="idx">5.1</span><span class="titre">Évolution temporelle du trafic</span><span class="points"></span><span class="page" data-cible="s5-1"></span></a></li>
     <li class="n2"><a href="#s5-2"><span class="idx">5.2</span><span class="titre">Comparaison catégorielle&nbsp;: produits et pays</span><span class="points"></span><span class="page" data-cible="s5-2"></span></a></li>
     <li class="n2"><a href="#s5-3"><span class="idx">5.3</span><span class="titre">Distribution de l’engagement par appareil</span><span class="points"></span><span class="page" data-cible="s5-3"></span></a></li>
-    <li class="n2"><a href="#s5-4"><span class="idx">5.4</span><span class="titre">Heatmap heure x jour de la semaine</span><span class="points"></span><span class="page" data-cible="s5-4"></span></a></li>
+    <li class="n2"><a href="#s5-4"><span class="idx">5.4</span><span class="titre">Heatmap heure &times; jour de la semaine</span><span class="points"></span><span class="page" data-cible="s5-4"></span></a></li>
     <li class="n2"><a href="#s5-5"><span class="idx">5.5</span><span class="titre">Compléments&nbsp;: entonnoir de conversion et corrélations</span><span class="points"></span><span class="page" data-cible="s5-5"></span></a></li>
     <li class="n1"><a href="#s6"><span class="idx">6</span><span class="titre">Le tableau de bord Audience Lab</span><span class="points"></span><span class="page" data-cible="s6"></span></a></li>
     <li class="n1"><a href="#s7"><span class="idx">7</span><span class="titre">Conclusions business</span><span class="points"></span><span class="page" data-cible="s7"></span></a></li>
@@ -119,7 +119,7 @@
     <div><b>18&#8239;101</b><span>sessions de 14&#8239;701 utilisateurs</span></div>
     <div><b>24,56&#8239;%</b><span>des sessions se terminent par un achat</span></div>
     <div><b>65,09&nbsp;USD</b><span>panier moyen d’une session avec achat</span></div>
-    <div><b>x&nbsp;2,47</b><span>trafic quotidien de décembre comparé à novembre</span></div>
+    <div><b>&times;&nbsp;2,47</b><span>trafic quotidien de décembre comparé à novembre</span></div>
   </div>
 
   <h3>Quatre constats</h3>
@@ -184,7 +184,7 @@
   </div>
 
   <h3>Outils</h3>
-  <p>Python 3.12&#8239;; pandas 3.0.6 et pyarrow 26.0.0 pour la préparation&#8239;; seaborn 0.13.2 et matplotlib 3.11.2 pour les figures statiques&#8239;; Plotly 7.1.0 et Streamlit 1.66.0 pour l’application&#8239;; pycountry pour les noms de pays&#8239;; pytest pour les tests automatisés (98 tests). Les versions sont figées dans <code>requirements.txt</code>.</p>
+  <p>Python 3.12&#8239;; pandas 3.0.6 et pyarrow 26.0.0 pour la préparation&#8239;; seaborn 0.13.2 et matplotlib 3.11.2 pour les figures statiques&#8239;; Plotly 7.1.0 et Streamlit 1.66.0 pour l’application&#8239;; pycountry pour les noms de pays&#8239;; pytest pour les tests automatisés (99 tests). Les versions sont figées dans <code>requirements.txt</code>.</p>
 
   <div class="encadre info">
     <div class="titre-encadre">Organisation du rapport</div>
@@ -298,14 +298,14 @@
   <p>La colonne <code>date</code> contient en réalité un horodatage, converti en <code>timestamp</code>&#8239;; on en dérive le jour, l’heure, le jour de la semaine et le mois (étape&nbsp;1.3 du sujet). Le catalogue est joint sans perte ni duplication, et pycountry ajoute le code ISO-3 (pour la carte) et le nom anglais du pays&#8239;; le Kosovo (<code>XK</code>), absent de la norme, est complété à la main. Enfin, comme <code>ga_session_id</code> n’est unique qu’au sein d’un utilisateur (18&#8239;034 valeurs pour 18&#8239;101 sessions), la clé de session combine <code>user_id</code> et <code>ga_session_id</code>. La table des sessions agrège début, fin, durée, nombre d’événements et d’articles, valeur du panier, chiffre d’affaires et indicateurs d’étape. Des contrôles automatiques vérifient sa cohérence avec la table des événements&nbsp;: unicité de la clé, somme des événements, chiffre d’affaires, durées positives ou nulles, un seul appareil et un seul pays par session.</p>
 
   <h3 id="s3-3"><span class="num">3.3</span>Valeurs aberrantes&nbsp;: signaler plutôt que supprimer</h3>
-  <p>La règle de Tukey (valeur au-dessus de Q3 + 1,5&nbsp;x IQR) est appliquée aux deux mesures d’engagement, sur l’ensemble des sessions. La borne basse, négative ou nulle, est sans objet.</p>
+  <p>La règle de Tukey (valeur au-dessus de Q3 + 1,5&nbsp;&times; IQR) est appliquée aux deux mesures d’engagement, sur l’ensemble des sessions. La borne basse, négative ou nulle, est sans objet.</p>
   <figure class="reduite">
     <div class="cadre"><img src="figures/valeurs_aberrantes.png" alt="Boxplots de la durée de session et du nombre d'événements avec la borne IQR"></div>
-    <figcaption><b>Figure&nbsp;1. Boxplots avant décision.</b> La ligne rouge marque la borne Q3 + 1,5&nbsp;x IQR. Durée&nbsp;: Q1 = 0&nbsp;s, Q3 = 364&nbsp;s, borne de 910&nbsp;s, dépassée par 2&#8239;075 sessions (11,5&#8239;%), maximum 16&#8239;196&nbsp;s. Événements&nbsp;: Q1 = 12, Q3 = 45, borne de 94,5, dépassée par 1&#8239;901 sessions (10,5&#8239;%), maximum 927. Source&nbsp;: notebook, section&nbsp;8.</figcaption>
+    <figcaption><b>Figure&nbsp;1. Boxplots avant décision.</b> La ligne rouge marque la borne Q3 + 1,5&nbsp;&times; IQR. Durée&nbsp;: Q1 = 0&nbsp;s, Q3 = 364&nbsp;s, borne de 910&nbsp;s, dépassée par 2&#8239;075 sessions (11,5&#8239;%), maximum 16&#8239;196&nbsp;s. Événements&nbsp;: Q1 = 12, Q3 = 45, borne de 94,5, dépassée par 1&#8239;901 sessions (10,5&#8239;%), maximum 927. Source&nbsp;: notebook, section&nbsp;8.</figcaption>
   </figure>
   <div class="encadre">
     <div class="titre-encadre">Pourquoi conserver ces 3&#8239;000 sessions</div>
-    <p>Les boxplots montrent une queue continue, pas quelques points isolés&nbsp;: ce sont de vrais comportements (grosses commandes, onglet resté ouvert). Surtout, ces sessions convertissent à 47,1&#8239;% contre 20,1&#8239;% pour les sessions typiques, ont un panier moyen de 3&#8239;074&nbsp;USD contre 514&nbsp;USD et apportent <strong>42,4&#8239;% du chiffre d’affaires</strong> (122&#8239;823&nbsp;USD). Les supprimer fausserait tous les indicateurs business. Elles sont donc signalées par <code>is_outlier_duration</code> et <code>is_outlier_events</code>, et les graphiques de distribution passent en échelle logarithmique plutôt que de les couper.</p>
+    <p>Les boxplots montrent une queue continue, pas quelques points isolés&nbsp;: ce sont de vrais comportements (grosses commandes, onglet resté ouvert). Surtout, ces sessions convertissent à 47,1&#8239;% contre 20,1&#8239;% pour les sessions typiques, ajoutent en moyenne 3&#8239;074&nbsp;USD au panier contre 514&nbsp;USD et apportent <strong>42,4&#8239;% du chiffre d’affaires</strong> (122&#8239;823&nbsp;USD). Les supprimer fausserait tous les indicateurs business. Elles sont donc signalées par <code>is_outlier_duration</code> et <code>is_outlier_events</code>, et les graphiques de distribution passent en échelle logarithmique plutôt que de les couper.</p>
   </div>
 </section>
 
@@ -398,7 +398,7 @@
   </figure>
   <div class="lecture">
     <div class="item"><b>527 sessions</b><span>record du 8 décembre 2020&#8239;; les 5 jours les plus actifs tombent entre le 1er et le 11 décembre</span></div>
-    <div class="item"><b>x&nbsp;2,47</b><span>sessions par jour en décembre (303,3) comparées à novembre (122,9)&#8239;; janvier&nbsp;: 161,6</span></div>
+    <div class="item"><b>&times;&nbsp;2,47</b><span>sessions par jour en décembre (303,3) comparées à novembre (122,9)&#8239;; janvier&nbsp;: 161,6</span></div>
     <div class="item"><b>87 sessions</b><span>le jour de Noël, contre 463 au Cyber Monday et 357 au Black Friday</span></div>
   </div>
   <p><strong>Lecture.</strong> Du 1er au 15 novembre, le trafic est faible (40 sessions par jour en moyenne). Un premier pic apparaît les 17 et 18 novembre (287 puis 229 sessions), au lendemain du 16 novembre, date à laquelle les ajouts au panier commencent à être collectés&nbsp;: il retombe dès le 19 (73 sessions) et ne marque donc pas encore la saison. La hausse durable commence le 24 novembre (201 sessions, contre 80 la veille et 27 le 22), juste avant le Black Friday, puis le trafic reste au-dessus de 400 sessions par jour en moyenne mobile pendant la première quinzaine de décembre&nbsp;: la semaine du 7 décembre totalise 3&#8239;041 sessions. Le Black Friday et le Cyber Monday lancent la saison, mais <strong>le pic est la période des commandes de Noël</strong>, avant les dates limites de livraison. Le trafic s’effondre ensuite (87 sessions le 25 décembre) puis reprend modérément en janvier.</p>
@@ -445,10 +445,10 @@
   <p><strong>Lecture.</strong> Les trois boîtes sont presque superposées et les densités ont la même forme. La seule différence visible est l’extrémité de la queue, plus longue sur desktop. L’histogramme de la tablette est plus irrégulier car il ne repose que sur 254 sessions de durée positive.</p>
   <p><strong>Interprétation.</strong> La densité est <strong>bimodale</strong>&nbsp;: un premier mode vers 80&nbsp;s correspond à des visites éclairs (un ou deux ajouts au panier), un second, plus large, entre 200 et 1&#8239;000&nbsp;s, à des sessions de composition de panier. Ces deux usages existent sur chaque appareil dans les mêmes proportions&nbsp;: <strong>l’appareil ne différencie pas l’engagement</strong> dans ce jeu. La densité de la valeur du panier le confirme, avec un panier médian identique de 382&nbsp;USD sur les trois appareils (valeur qui reflète l’artefact d’obfuscation décrit en section&nbsp;8).</p>
 
-  <h3 id="s5-4"><span class="num">5.4</span>Heatmap heure x jour de la semaine</h3>
+  <h3 id="s5-4"><span class="num">5.4</span>Heatmap heure &times; jour de la semaine</h3>
   <figure>
     <div class="cadre"><img src="figures/heatmap_heure_jour.png" alt="Heatmap annotée du nombre de sessions par heure et par jour de la semaine"></div>
-    <figcaption><b>Figure&nbsp;5. Sessions selon l’heure et le jour de début de session.</b> <code>sns.heatmap(annot=True, cmap="Blues")</code>&nbsp;: palette séquentielle à une seule teinte, adaptée à des effectifs. Grille complète de 7&nbsp;x&nbsp;24 cases. Dans l’application&nbsp;: <code>px.imshow</code>. Source&nbsp;: notebook, section&nbsp;10.4.</figcaption>
+    <figcaption><b>Figure&nbsp;5. Sessions selon l’heure et le jour de début de session.</b> <code>sns.heatmap(annot=True, cmap="Blues")</code>&nbsp;: palette séquentielle à une seule teinte, adaptée à des effectifs. Grille complète de 7&nbsp;&times;&nbsp;24 cases. Dans l’application&nbsp;: <code>px.imshow</code>. Source&nbsp;: notebook, section&nbsp;10.4.</figcaption>
   </figure>
   <div class="lecture">
     <div class="item"><b>3&#8239;180 contre 1&#8239;673</b><span>sessions le mardi et le dimanche, soit un rapport de 1,9</span></div>
@@ -502,7 +502,7 @@
   </figure>
   <figure>
     <div class="capture" style="aspect-ratio: 1230 / 475"><img style="width: 130.0813%; margin-left: -26.8293%; margin-top: -24.3902%" src="../docs/captures/temporalite.png" alt="Onglet Temporalité en thème sombre : courbe d’évolution du trafic"></div>
-    <figcaption><b>Figure&nbsp;9. Temporalité.</b> Courbe <code>px.line</code> (jour ou semaine, détail par appareil) avec repères calendaires&#8239;; la heatmap heure x jour suit dans l’onglet.</figcaption>
+    <figcaption><b>Figure&nbsp;9. Temporalité (thème sombre, comme les figures&nbsp;10 à&nbsp;12).</b> Courbe <code>px.line</code> (jour ou semaine, détail par appareil) avec repères calendaires&#8239;; la heatmap heure &times; jour suit dans l’onglet.</figcaption>
   </figure>
   <figure>
     <div class="capture" style="aspect-ratio: 1230 / 570"><img style="width: 130.0813%; margin-left: -26.8293%; margin-top: -24.3902%" src="../docs/captures/audience.png" alt="Onglet Audience en thème sombre : anneau des appareils et barres des catégories"></div>
@@ -533,7 +533,7 @@
     <div class="carte"><h4>Deux thèmes cohérents</h4><p>Un thème clair par défaut et un thème sombre, adapté à la projection, au choix par une bascule. Le CSS et chaque figure Plotly (fond, texte, palette) suivent le thème&#8239;; les couleurs des appareils restent identiques d’un graphique à l’autre.</p></div>
     <div class="carte"><h4>Des variations honnêtes</h4><p>Chaque carte compare la sélection à la période précédente de même durée. Si celle-ci sort des données, ce qui est le cas de la vue par défaut, l’application compare la seconde moitié de la période à la première et l’annonce en clair&#8239;; un seul jour sélectionné n’affiche pas de variation.</p></div>
     <div class="carte"><h4>Lisible et robuste</h4><p>Typographie française (espaces insécables, virgule décimale), valeurs de données en anglais, légende chiffrée sous chaque graphique, message «&nbsp;Aucune donnée pour ces filtres&nbsp;» au lieu d’une erreur. Une page «&nbsp;Données&nbsp;» montre l’aperçu des sessions filtrées.</p></div>
-    <div class="carte"><h4>Rapide en ligne</h4><p>Données en Parquet, chargement et filtrage mis en cache (<code>st.cache_data</code>), onglets calculés seulement à l’ouverture&nbsp;: de 0,1 à 0,4&nbsp;s par interaction en local. 98 tests automatisés couvrent données, indicateurs, graphiques et application.</p></div>
+    <div class="carte"><h4>Rapide en ligne</h4><p>Données en Parquet, chargement et filtrage mis en cache (<code>st.cache_data</code>), onglets calculés seulement à l’ouverture&nbsp;: de 0,1 à 0,4&nbsp;s par interaction en local. 99 tests automatisés couvrent données, indicateurs, graphiques et application.</p></div>
   </div>
 </section>
 
@@ -615,7 +615,7 @@
     <li><strong>La session, bon niveau d’analyse.</strong> Passer de 719&#8239;386 événements à 18&#8239;101 sessions a rendu calculables la durée, la valeur du panier et l’entonnoir, et a révélé que <code>ga_session_id</code> seul n’est pas un identifiant de session.</li>
     <li><strong>Des statistiques robustes à l’asymétrie.</strong> Médiane plutôt que moyenne pour la durée, échelle logarithmique, corrélation de Spearman et taux conditionnels pour l’entonnoir&nbsp;: les choix de représentation ont évité plusieurs conclusions trompeuses.</li>
     <li><strong>Un format adapté au déploiement.</strong> Le Parquet divise par neuf environ le volume (41,7&nbsp;Mo de CSV contre 4,8&nbsp;Mo) en conservant les types&#8239;; avec la mise en cache, l’application reste fluide sur Streamlit Community Cloud.</li>
-    <li><strong>Une application testée.</strong> 98 tests pytest vérifient les données traitées, les indicateurs, les constats, les graphiques (y compris les filtres vides et le suivi du thème) et l’application elle-même.</li>
+    <li><strong>Une application testée.</strong> 99 tests pytest vérifient les données traitées, les indicateurs, les constats, les graphiques (y compris les filtres vides et le suivi du thème) et l’application elle-même.</li>
   </ul>
 
   <h3>Limites des données</h3>
@@ -626,21 +626,21 @@
       <tr><td><strong>Échantillon obfusqué</strong></td><td>Google anonymise ce jeu public&nbsp;: 6&#8239;155 sessions (34,0&#8239;%) contiennent exactement 12 articles distincts et les paniers de 191 et 382&nbsp;USD sont surreprésentés (panier médian de 382&nbsp;USD sur chaque appareil).</td><td>Niveaux absolus de panier à prendre avec prudence&#8239;; comparaisons relatives conservées.</td></tr>
       <tr><td><strong>Sessions à durée nulle</strong></td><td>5&#8239;922 sessions (32,7&#8239;%) n’ont qu’un horodatage&nbsp;: leur durée réelle est inconnue.</td><td>Durée moyenne et médiane sous-estimées&#8239;; ces sessions sont exclues des seules figures en échelle log.</td></tr>
       <tr><td><strong>Valeur ajoutée au panier et dépense</strong></td><td>938,63&nbsp;USD ajoutés au panier par session contre 15,99&nbsp;USD de chiffre d’affaires&#8239;; un article ajouté plusieurs fois compte plusieurs fois.</td><td>Indicateur d’intérêt, jamais présenté comme une dépense.</td></tr>
-      <tr><td><strong>Collecte incomplète en début de période</strong></td><td>Avant le 16 novembre, seuls les achats sont enregistrés (600 sessions, 99,8&#8239;% avec achat, 13,3&#8239;% du chiffre d’affaires)&#8239;; le pic des 17 et 18 novembre (287 et 229 sessions) suit immédiatement le démarrage de la collecte des ajouts au panier&#8239;; <code>begin_checkout</code> n’apparaît que le 23 novembre. 953 des 1&#8239;006 achats sans début de paiement sont antérieurs à cette date.</td><td>Conversion globale légèrement surestimée&#8239;; entonnoir stable si l’on part du 23 novembre (voir ci-dessous).</td></tr>
+      <tr><td><strong>Collecte incomplète en début de période</strong></td><td>Avant le 16 novembre, seuls les achats sont enregistrés (600 sessions, 99,8&#8239;% avec achat, 13,3&#8239;% du chiffre d’affaires)&#8239;; le pic des 17 et 18 novembre (287 et 229 sessions) suit immédiatement le démarrage de la collecte des ajouts au panier&#8239;; <code>begin_checkout</code> n’apparaît que le 23 novembre. 953 des 1&#8239;006 achats sans début de paiement sont antérieurs à cette date.</td><td>Conversion globale nettement surestimée&#8239;; entonnoir stable (voir ci-dessous).</td></tr>
       <tr><td><strong>Événements e-commerce seulement</strong></td><td>Pas de pages vues ni de source de trafic&nbsp;: une session est ici une visite comportant au moins un ajout au panier, un paiement ou un achat.</td><td>Les visiteurs qui ne font que regarder sont invisibles&#8239;; pas d’analyse d’acquisition possible.</td></tr>
     </tbody>
   </table>
 
   <div class="encadre info">
     <div class="titre-encadre">Test de robustesse de l’entonnoir</div>
-    <p>En limitant l’analyse aux 16&#8239;702 sessions démarrées à partir du 23 novembre, date où les trois types d’événements sont collectés, le taux de conversion descend à 20,9&#8239;%, mais les taux conditionnels restent du même ordre&nbsp;: 36,3&#8239;% des sessions avec panier commencent un paiement (35,0&#8239;% sur la période complète) et 47,1&#8239;% des paiements aboutissent (identique). Il ne reste alors que 53 achats sans <code>begin_checkout</code>. <strong>La conclusion principale, une perte concentrée entre panier et paiement, ne dépend donc pas de ce défaut de collecte.</strong> Calcul complémentaire réalisé pour ce rapport à partir de <code>data/processed/</code>.</p>
+    <p>En limitant l’analyse aux 16&#8239;421 sessions démarrées à partir du 25 novembre, date à partir de laquelle les trois types d’événements sont collectés en continu (ajouts au panier absents du 21 au 24 novembre), la conversion tombe à 20,3&#8239;% contre 24,6&#8239;%&nbsp;: la conversion globale est nettement surestimée. Les taux conditionnels restent du même ordre&nbsp;: 36,3&#8239;% des sessions avec panier commencent un paiement (35,0&#8239;% sur la période complète) et 47,2&#8239;% des paiements aboutissent (47,1&#8239;%), sans aucun achat sans <code>begin_checkout</code>. <strong>La conclusion principale, une perte concentrée entre panier et paiement, ne dépend donc pas de ce défaut de collecte.</strong> Calcul reproduit dans le notebook (section&nbsp;10.7).</p>
   </div>
 
   <h3>Limites de l’outil et pistes d’amélioration</h3>
   <ul>
     <li><strong>Hébergement gratuit.</strong> Streamlit Community Cloud met l’application en veille après une période d’inactivité&#8239;; le premier chargement peut prendre quelques secondes.</li>
     <li><strong>Dépendance à la version de Streamlit.</strong> Le CSS personnalisé cible la structure interne de Streamlit 1.66, d’où la version figée dans <code>requirements.txt</code>.</li>
-    <li><strong>Pistes.</strong> Exploiter <code>users.csv</code> pour une analyse de cohortes et de valeur vie client&#8239;; ajouter un raccourci «&nbsp;à partir du 23 novembre&nbsp;» pour neutraliser le défaut de collecte&#8239;; confirmer le fuseau horaire auprès de la source&#8239;; enrichir les données avec les pages vues et les sources de trafic pour relier l’audience à l’acquisition.</li>
+    <li><strong>Pistes.</strong> Exploiter <code>users.csv</code> pour une analyse de cohortes et de valeur vie client&#8239;; ajouter un raccourci «&nbsp;à partir du 25 novembre&nbsp;» pour neutraliser le défaut de collecte&#8239;; confirmer le fuseau horaire auprès de la source&#8239;; enrichir les données avec les pages vues et les sources de trafic pour relier l’audience à l’acquisition.</li>
   </ul>
 </section>
 
@@ -684,7 +684,7 @@
 ├── soutenance/                    <span class="com"># support de l'oral et déroulé de la démonstration</span>
 │   └── presentation.html, presentation.pdf, deroule_demo.md
 ├── scripts/                       <span class="com"># téléchargement des données, génération du PDF</span>
-├── tests/                         <span class="com"># 98 tests pytest</span>
+├── tests/                         <span class="com"># 99 tests pytest</span>
 ├── docs/captures/                 <span class="com"># captures d'écran de l'application</span>
 ├── .streamlit/config.toml
 ├── README.md                      <span class="com"># présentation, captures, liens, exécution</span>
@@ -703,7 +703,7 @@
       <tr><td>2.3.1 Évolution temporelle avec filtres</td><td>Rapport 5.1&#8239;; onglet Temporalité (<code>px.line</code>)</td></tr>
       <tr><td>2.3.2 Comparaison catégorielle (barres ou camembert)</td><td>Rapport 5.2&#8239;; onglet Audience (<code>px.bar</code>, <code>px.pie</code>)</td></tr>
       <tr><td>2.3.3 Distribution par appareil (boxplot ou densité)</td><td>Rapport 5.3&#8239;; onglet Engagement (<code>px.box</code>, <code>px.histogram</code>)</td></tr>
-      <tr><td>2.3.4 Heatmap heures x jours</td><td>Rapport 5.4&#8239;; onglet Temporalité (<code>px.imshow</code>)</td></tr>
+      <tr><td>2.3.4 Heatmap heures &times; jours</td><td>Rapport 5.4&#8239;; onglet Temporalité (<code>px.imshow</code>)</td></tr>
       <tr><td>2.4 <code>st.sidebar</code>, <code>st.metric</code>, <code>st.plotly_chart</code>, <code>st.download_button</code></td><td>Rapport 6&#8239;; <code>app.py</code>, sections&nbsp;4 à 6</td></tr>
       <tr><td>3.1 Code source propre et commenté, notebook</td><td><code>app.py</code>, <code>audience/</code>, <code>notebooks/</code>&#8239;; dépôt GitHub</td></tr>
       <tr><td>3.2 Rapport d’analyse</td><td>Présent document (<code>rapport/rapport_analyse.pdf</code>)</td></tr>
@@ -715,7 +715,7 @@
   <ul class="petit">
     <li>Google, <em>Google Analytics 4 ecommerce sample dataset</em>, jeu public BigQuery <code>bigquery-public-data.ga4_obfuscated_sample_ecommerce</code>.</li>
     <li>Observable, <em>Google Merchandise Sales Data</em>, <code>@observablehq/google-merchandise-sales-data</code>&#8239;; reprise Kaggle <code>mexwell/google-merchandise-sales-data</code>.</li>
-    <li>J. W. Tukey, <em>Exploratory Data Analysis</em>, Addison-Wesley, 1977 (règle des 1,5&nbsp;x IQR).</li>
+    <li>J. W. Tukey, <em>Exploratory Data Analysis</em>, Addison-Wesley, 1977 (règle des 1,5&nbsp;&times; IQR).</li>
     <li>Code et données du projet&nbsp;: <a href="https://github.com/Abdazz/audience-lab">https://github.com/Abdazz/audience-lab</a>&#8239;; application&nbsp;: <a href="https://audience-lab.streamlit.app">https://audience-lab.streamlit.app</a>.</li>
   </ul>
 </section>

@@ -17,7 +17,7 @@ Démonstration en direct d'environ 6 minutes sur l'application en ligne, entre l
 
 | Temps | Où | Action | Ce que l'on montre |
 |---|---|---|---|
-| 0:00 | Accueil, onglet **Synthèse** | Aucune action : présenter l'écran | En-tête, puces de contexte (18 101 sessions, période, aucun filtre actif), bandeau des six `st.metric`, constats rédigés automatiquement |
+| 0:00 | Accueil, onglet **Synthèse** | Aucune action : présenter l'écran | En-tête, puces de contexte (18 101 sessions, période, aucun filtre actif), bandeau des six `st.metric`, constats rédigés automatiquement ; signaler la limite de collecte (note « Source » de la barre latérale) |
 | 0:45 | Onglet **Temporalité** | Survoler le pic de début décembre ; passer la granularité sur **Semaine** puis revenir sur **Jour** ; activer **Détail par appareil** | Record du 8 décembre 2020 (527 sessions), repères Black Friday, Cyber Monday, Noël ; trois courbes de même forme |
 | 1:45 | Onglet **Temporalité**, plus bas | Faire défiler jusqu'à la heatmap | Lignes du week-end plus claires ; case maximale : mardi à 13 h (159 sessions) |
 | 2:15 | Barre latérale, **Période** | Choisir du **01/01/2021 au 31/01/2021** | Le bandeau compare janvier à **décembre**, vraie période précédente de même durée (note sous le bandeau) |
@@ -33,6 +33,8 @@ Démonstration en direct d'environ 6 minutes sur l'application en ligne, entre l
 **0:00, accueil.** « Voici Audience Lab : à gauche les filtres, en haut six indicateurs toujours visibles. Sans filtre : 18 101 sessions, 14 701 utilisateurs, un panier moyen de 65,09 USD et 24,6 % de sessions avec achat. L'onglet Synthèse rédige les constats à partir des données filtrées : ils changent avec chaque filtre. »
 
 **0:00, sur les variations.** « Sur la période complète, la période précédente n'existe pas dans les données : l'application compare donc la seconde moitié à la première et l'écrit en toutes lettres sous le bandeau. Je ne voulais pas afficher une variation trompeuse. »
+
+**0:00, sur la collecte (à dire sans faute).** « Une précaution : avant le 16 novembre 2020, seuls les achats sont enregistrés, et les ajouts au panier ne sont collectés en continu qu'à partir du 25 novembre. La conversion du début de novembre est donc gonflée, et la baisse de 11,4 points affichée par défaut vient en partie de ce défaut de collecte. La barre latérale et la carte « À propos des données » le signalent. »
 
 **0:45, Temporalité.** « Le trafic culmine le 8 décembre avec 527 sessions, 2,7 fois la moyenne journalière. Le pic n'est pas le Black Friday : ce sont les commandes de Noël, avant les dates limites de livraison. Le détail par appareil montre trois courbes de même forme. »
 
@@ -64,7 +66,7 @@ Démonstration en direct d'environ 6 minutes sur l'application en ligne, entre l
 La règle IQR signale 3 000 sessions (16,6 %), mais elles forment une queue continue, pas des erreurs : ce sont de grosses commandes ou des onglets restés ouverts. Elles convertissent à 47,1 % et portent 42,4 % du chiffre d'affaires ; les supprimer fausserait tous les indicateurs. Elles sont donc signalées par deux colonnes booléennes et les graphiques passent en échelle logarithmique.
 
 **2. Un taux de conversion de 24,6 %, n'est-ce pas très élevé ?**
-Une session est ici une visite avec au moins un événement e-commerce : les simples visiteurs qui regardent sans ajouter au panier n'existent pas dans ce jeu. De plus, avant le 16 novembre, seuls les achats sont enregistrés, et begin_checkout n'apparaît que le 23 novembre. En partant du 23 novembre, la conversion descend à 20,9 %, mais les taux de l'entonnoir restent stables (36,3 % puis 47,1 %) : la conclusion ne change pas.
+Une session est ici une visite avec au moins un événement e-commerce : les simples visiteurs qui regardent sans ajouter au panier n'existent pas dans ce jeu. De plus, avant le 16 novembre, seuls les achats sont enregistrés ; begin_checkout n'apparaît que le 23 novembre et les ajouts au panier ne sont collectés en continu qu'à partir du 25 novembre. En partant du 25 novembre, quand les trois types d'événements sont collectés, la conversion tombe à 20,3 % : le chiffre global de 24,6 % est donc nettement surestimé. Mais les taux de l'entonnoir restent stables (36,3 % puis 47,2 %, contre 35,0 % et 47,1 %) : la conclusion ne change pas.
 
 **3. Pourquoi des taux conditionnels plutôt qu'un entonnoir classique ?**
 Les étapes ne sont pas imbriquées : 1 993 sessions commencent un paiement sans add_to_cart et 1 006 achètent sans begin_checkout. Diviser les effectifs d'une étape par la précédente ne donnerait pas une probabilité de passage ; on calcule donc la part des sessions d'une étape qui atteignent la suivante (35,0 %, puis 47,1 %).
@@ -73,4 +75,4 @@ Les étapes ne sont pas imbriquées : 1 993 sessions commencent un paiement s
 Le profil horaire est plat (681 à 789 sessions selon l'heure), ce qui est surprenant pour une audience à 44 % américaine. Le fuseau des horodatages n'est pas documenté et Google obfusque ce jeu public. Je lis donc l'heure comme une tendance relative et je fonde les recommandations sur le jour de la semaine.
 
 **5. Comment garantir que les chiffres sont les mêmes partout ?**
-Une seule source : le notebook produit les fichiers Parquet de `data/processed/`, que lisent l'application et les calculs du rapport. Le notebook contrôle la cohérence entre sessions et événements, et 95 tests pytest vérifient les données traitées, les indicateurs, les constats, les graphiques (filtres vides, suivi du thème) et l'application elle-même.
+Une seule source : le notebook produit les fichiers Parquet de `data/processed/`, que lisent l'application et les calculs du rapport. Le notebook contrôle la cohérence entre sessions et événements, et 99 tests pytest vérifient les données traitées, les indicateurs, les constats, les graphiques (filtres vides, suivi du thème) et l'application elle-même.
